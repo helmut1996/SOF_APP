@@ -28,7 +28,7 @@ class _HomePagesState extends State<HomePages> {
         colorLineSelected: Colors.white,
         baseStyle:
             TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 25.0),
-        selectedStyle: TextStyle(color: Colors.white),
+        selectedStyle: TextStyle(color: Colors.black54),
         onTap: () {
           print("Click item");
         },
@@ -41,7 +41,7 @@ class _HomePagesState extends State<HomePages> {
         colorLineSelected: Colors.white,
         baseStyle:
             TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 25.0),
-        selectedStyle: TextStyle(color: Colors.white),
+        selectedStyle: TextStyle(color: Colors.black54),
         onTap: () {
           print("Click item");
         },
@@ -62,8 +62,8 @@ class _HomePagesState extends State<HomePages> {
       //    enableCornerAnimin: true,
       //    slidePercent: 80.0,
       //    verticalScalePercent: 80.0,
-      //    contentCornerRadius: 10.0,
-      //    iconMenuAppBar: Icon(Icons.menu),
+      contentCornerRadius: 20.0,
+      // iconMenuAppBar: Icon(Icons.menu),
       //    backgroundContent: DecorationImage((image: ExactAssetImage('assets/bg_news.jpg'),fit: BoxFit.cover),
       //    whithAutoTittleName: true,
       //    styleAutoTittleName: TextStyle(color: Colors.red),
