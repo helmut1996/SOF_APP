@@ -15,20 +15,20 @@ class _HomePagesState extends State<HomePages> {
     ScreenHiddenDrawer(
       ItemHiddenMenu(
         name: "Facturas",
-        colorLineSelected: Colors.teal,
+        colorLineSelected: Colors.white,
         baseStyle:
             TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 25.0),
-        selectedStyle: TextStyle(color: Colors.teal),
+        selectedStyle: TextStyle(color: Colors.black54),
       ),
       FacturasPages(),
     ),
     ScreenHiddenDrawer(
       ItemHiddenMenu(
         name: "PreFacturas",
-        colorLineSelected: Colors.orange,
+        colorLineSelected: Colors.white,
         baseStyle:
             TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 25.0),
-        selectedStyle: TextStyle(color: Colors.orange),
+        selectedStyle: TextStyle(color: Colors.white),
         onTap: () {
           print("Click item");
         },
@@ -38,10 +38,10 @@ class _HomePagesState extends State<HomePages> {
     ScreenHiddenDrawer(
       ItemHiddenMenu(
         name: "Productos",
-        colorLineSelected: Colors.orange,
+        colorLineSelected: Colors.white,
         baseStyle:
             TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 25.0),
-        selectedStyle: TextStyle(color: Colors.orange),
+        selectedStyle: TextStyle(color: Colors.white),
         onTap: () {
           print("Click item");
         },
@@ -54,7 +54,7 @@ class _HomePagesState extends State<HomePages> {
   Widget build(BuildContext context) {
     return HiddenDrawerMenu(
       backgroundColorMenu: Colors.blueGrey,
-      backgroundColorAppBar: Colors.cyan,
+      backgroundColorAppBar: Colors.pinkAccent,
       screens: itemList,
       //    typeOpen: TypeOpen.FROM_RIGHT,
       //    disableAppBarDefault: false,
@@ -71,13 +71,13 @@ class _HomePagesState extends State<HomePages> {
       //    backgroundColorContent: Colors.blue,
       //    elevationAppBar: 4.0,
       tittleAppBar: Center(
-        child: Icon(Icons.ac_unit),
-      ),
+          //child: Icon(Icons.ac_unit),
+          ),
       //    enableShadowItensMenu: true,
       backgroundMenu: DecorationImage(
           image: NetworkImage(
               'https://firebasestorage.googleapis.com/v0/b/prueba2-8bf0c.appspot.com/o/logoushas.jpg?alt=media&token=1ff0bc30-1ab8-47b0-9e3f-a770b95e3e9f'),
-          fit: BoxFit.cover),
+          fit: BoxFit.fill),
     );
   }
 }
