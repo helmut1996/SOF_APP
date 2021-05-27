@@ -13,62 +13,64 @@ class HomePages extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(padding: EdgeInsets.only(top: 80)),
-            Center(
-              child: Container(
-                margin: EdgeInsets.only(top: 20),
-                child: Text(
-                  "Control de Facturas",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 60,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black),
+      body: Stack(children: <Widget>[
+        SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(padding: EdgeInsets.only(top: 80)),
+              Center(
+                child: Container(
+                  margin: EdgeInsets.only(top: 20),
+                  child: Text(
+                    "Control de Facturas",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 60,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
+                  ),
                 ),
               ),
-            ),
-            Padding(padding: EdgeInsets.only(bottom: 20, top: 160)),
-            Container(
-              width: 800,
-              child: TextField(
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: 'Ingrese su contraseña')),
-            ),
-            Container(
-              width: 800,
-              margin: EdgeInsets.only(top: 30),
-              child: ElevatedButton(
-                onPressed: () {},
-                child: Text("Entrar"),
-                style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0),
-                            side: BorderSide(color: Colors.white)))),
+              Padding(padding: EdgeInsets.only(bottom: 20, top: 160)),
+              Container(
+                width: 800,
+                child: TextField(
+                    textAlign: TextAlign.center,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Ingrese su contraseña')),
               ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: TimerBuilder.periodic(Duration(seconds: 1),
-                  builder: (context) {
-                print("${getSystemTime()}");
-                return Text(
-                  "${getSystemTime()}",
-                  style: TextStyle(
-                      color: Color(0xff2d386b),
-                      fontSize: 30,
-                      fontWeight: FontWeight.w700),
-                );
-              }),
-            )
-          ],
+              Container(
+                width: 800,
+                margin: EdgeInsets.only(top: 30),
+                child: ElevatedButton(
+                  onPressed: () {},
+                  child: Text("Entrar"),
+                  style: ButtonStyle(
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                              side: BorderSide(color: Colors.white)))),
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child:
+              TimerBuilder.periodic(Duration(seconds: 1), builder: (context) {
+            print("${getSystemTime()}");
+            return Text(
+              "${getSystemTime()}",
+              style: TextStyle(
+                  color: Color(0xff2d386b),
+                  fontSize: 30,
+                  fontWeight: FontWeight.w700),
+            );
+          }),
+        )
+      ]),
     );
   }
 }
