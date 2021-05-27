@@ -6,30 +6,21 @@ class HomePages extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Container(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(padding: EdgeInsets.fromLTRB(0, 50, 0, 0)),
-              Center(
-                child: Container(
-                  height: 100,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage('assets/imagenes/kool.jpg'))),
-                ),
-              ),
-              Container(
-                height: 400,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/imagenes/fondo.png'),
-                  ),
-                ),
-              ),
-            ],
+      body: Column(
+        children: [
+          Padding(padding: EdgeInsets.only(top: 50)),
+          Center(
+            child: Container(
+                child: Text(
+              "Control de Facturas",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,fontFamily: ),
+            )),
           ),
-        ),
+        ],
       ),
     );
   }
