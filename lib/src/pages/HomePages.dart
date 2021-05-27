@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 class HomePages extends StatelessWidget {
   String getSystemTime() {
     var now = new DateTime.now();
-    return new DateFormat("H:m:s").format(now);
+    return new DateFormat().add_jms().format(now);
   }
 
   @override
@@ -34,9 +34,10 @@ class HomePages extends StatelessWidget {
             Container(
               width: 800,
               child: TextField(
+                  textAlign: TextAlign.center,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      hintText: 'Enter a search term')),
+                      hintText: 'Ingrese su contraseña')),
             ),
             Container(
               width: 800,
