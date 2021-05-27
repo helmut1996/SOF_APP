@@ -20,6 +20,12 @@ class HomePages extends StatelessWidget {
                   color: Colors.black),
             )),
           ),
+          Container(
+            child: TextField(
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Enter a search term')),
+          ),
         ],
       ),
     );
