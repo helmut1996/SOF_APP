@@ -52,7 +52,8 @@ class HomePages extends StatelessWidget {
                             side: BorderSide(color: Colors.white)))),
               ),
             ),
-            Center(
+            Align(
+              alignment: Alignment.bottomCenter,
               child: TimerBuilder.periodic(Duration(seconds: 1),
                   builder: (context) {
                 print("${getSystemTime()}");
@@ -64,7 +65,7 @@ class HomePages extends StatelessWidget {
                       fontWeight: FontWeight.w700),
                 );
               }),
-            ),
+            )
           ],
         ),
       ),
