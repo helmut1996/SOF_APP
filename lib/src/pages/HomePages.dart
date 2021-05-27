@@ -17,8 +17,7 @@ class HomePages extends StatelessWidget {
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                  fontFamily: "Permanent"),
+                  color: Colors.black),
             )),
           ),
         ],
