@@ -7,26 +7,28 @@ class HomePages extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
-        child: Column(
-          children: [
-            Container(
-              height: 400,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/imagenes/fondo.png'),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(padding: EdgeInsets.fromLTRB(0, 50, 0, 0)),
+              Center(
+                child: Container(
+                  height: 100,
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage('assets/imagenes/kool.jpg'))),
                 ),
               ),
-            ),
-            Center(
-              child: Positioned(
-                  child: Container(
-                width: 100,
+              Container(
+                height: 400,
                 decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('assets/imagenes/kool.jpg'))),
-              )),
-            ),
-          ],
+                  image: DecorationImage(
+                    image: AssetImage('assets/imagenes/fondo.png'),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
