@@ -3,6 +3,7 @@ import 'package:sof_app/Presentation/pages/FacturasCosmeticoPages.dart';
 import 'package:sof_app/Presentation/pages/FacturasFerreteriaPages.dart';
 import 'package:sof_app/Presentation/pages/FacturasLibrerias.dart';
 import 'package:sof_app/Presentation/pages/HomePages.dart';
+import 'package:sof_app/Presentation/pages/LoginPages.dart';
 import 'package:sof_app/Presentation/pages/PreFacturasCosmeticosPages.dart';
 
 class Routes {
@@ -10,6 +11,8 @@ class Routes {
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(builder: (_) => HomePages());
+      case '/login':
+        return MaterialPageRoute(builder: (_) => LoginPages());
 
       case '/facturasCosmeticos':
         return MaterialPageRoute(builder: (_) => FacturaFerreteriaPages());

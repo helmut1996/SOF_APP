@@ -1,0 +1,1 @@
+enum LoggedIn { True, False }
