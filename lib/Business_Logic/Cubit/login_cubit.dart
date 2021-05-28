@@ -40,6 +40,8 @@ class LoginCubit extends Cubit<LoginState> {
     }
   }
 
+
+
   void logOut() {
     emitCheckLogin(LoggedIn.False);
     emitLoggedOut();
