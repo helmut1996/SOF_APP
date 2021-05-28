@@ -1,12 +1,31 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sof_app/Business_Logic/Cubit/login_cubit.dart';
 import 'package:timer_builder/timer_builder.dart';
 import 'package:intl/intl.dart';
 
-class LoginPages extends StatelessWidget {
+class LoginPages extends StatefulWidget {
+  @override
+  _LoginPagesState createState() => _LoginPagesState();
+}
+
+class _LoginPagesState extends State<LoginPages> {
   String getSystemTime() {
     var now = new DateTime.now();
     return new DateFormat().add_jms().format(now);
+  }
+
+  final textPasswordController = TextEditingController();
+  @override
+  void initState() {
+    SystemChrome.setEnabledSystemUIOverlays([]);
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
+    super.initState();
   }
 
   @override
@@ -34,6 +53,14 @@ class LoginPages extends StatelessWidget {
             Container(
               width: 800,
               child: TextField(
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
+                  keyboardType: TextInputType.number,
+                  obscureText: true,
+                  enableSuggestions: false,
+                  autocorrect: false,
+                  controller: textPasswordController,
                   textAlign: TextAlign.center,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(),
@@ -43,7 +70,11 @@ class LoginPages extends StatelessWidget {
               width: 800,
               margin: EdgeInsets.only(top: 30),
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  context
+                      .read<LoginCubit>()
+                      .logIn(textPasswordController.text, context);
+                },
                 child: Text("Entrar"),
                 style: ButtonStyle(
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(

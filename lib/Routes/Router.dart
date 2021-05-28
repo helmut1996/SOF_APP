@@ -11,6 +11,8 @@ class Routes {
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(builder: (_) => HomePages());
+      case '/homepage':
+        return MaterialPageRoute(builder: (_) => HomePages());
       case '/login':
         return MaterialPageRoute(builder: (_) => LoginPages());
 

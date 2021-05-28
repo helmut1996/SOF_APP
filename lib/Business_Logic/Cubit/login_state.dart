@@ -22,6 +22,10 @@ class LoggedInApp extends LoginState {
   final LoggedIn isLogged;
 
   LoggedInApp({required this.isLogged});
+  @override
+  String toString() {
+    return 'LoggedInApp{isLogged: $isLogged}';
+  }
 }
 
 class LoggedOutApp extends LoginState {
@@ -29,3 +33,5 @@ class LoggedOutApp extends LoginState {
 
   LoggedOutApp({required this.isLogged});
 }
+
+class LoginError extends LoginState {}
