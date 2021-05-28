@@ -58,10 +58,10 @@ class _LoginPagesState extends State<LoginPages> {
                         .read<LoginCubit>()
                         .logIn(textPasswordController.text, context);
                   },
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.digitsOnly
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp('[0-9.,]+')),
                   ],
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
                   obscureText: true,
                   enableSuggestions: false,
                   autocorrect: false,

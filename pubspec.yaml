@@ -34,6 +34,7 @@ dependencies:
   flutter_bloc: ^7.0.0
   hydrated_bloc: ^7.0.0
   rflutter_alert: ^2.0.2
+  cupertino_tabbar: ^2.0.0
 
 
 dev_dependencies:
@@ -58,6 +59,10 @@ flutter:
     - family: Permanent
       fonts:
         - asset: assets/fonts/fonts1.ttf
+    - family: SFProRounded
+      fonts:
+        - asset: assets/fonts/SF-Pro-Rounded-Regular.otf
+          weight: 400
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

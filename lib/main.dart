@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sof_app/Presentation/pages/HomePages.dart';
 import 'package:sof_app/Business_Logic/Cubit/login_cubit.dart';
@@ -28,6 +27,9 @@ class MyApp extends StatelessWidget {
               _loginState.isLogged == LoggedIn.True) {
             _navigator.currentState!.pushNamedAndRemoveUntil('/homepage',
                 (Route route) => route.settings.name == 'homepage');
+          } else if (_loginState.isLogged == LoggedIn.True) {
+            firstPage = '/';
+            fnFirstPage = HomePages();
           } else {
             firstPage = '/login';
             fnFirstPage = LoginPages();

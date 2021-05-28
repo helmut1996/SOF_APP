@@ -1,4 +1,4 @@
-import 'package:bloc/src/bloc.dart';
+import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -12,7 +12,7 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   void initialCheckIfLoggedIn() {
-    emitCheckLogin(LoggedIn.False);
+    emitCheckLogin(LoggedIn.True);
   }
 
   void logIn(String pin, BuildContext context) {
@@ -28,7 +28,7 @@ class LoginCubit extends Cubit<LoginState> {
         buttons: [
           DialogButton(
             child: Text(
-              "Cancelar",
+              "Reintentar",
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
             onPressed: () => Navigator.pop(context),
