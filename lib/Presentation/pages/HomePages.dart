@@ -48,26 +48,40 @@ class _HomePageState extends State<HomePages> {
                             Container(
                               height: 200,
                               child: Tab(
-                                  child: Text("Facturas\n MARNOR",
-                                      style: TextStyle(fontSize: 25))),
+                                  child: Text(
+                                "Facturas\nMARNOR",
+                                style: TextStyle(fontSize: 20),
+                                textAlign: TextAlign.center,
+                              )),
                             ),
                             Container(
                               height: 200,
                               child: Tab(
-                                  child: Text("Facturas\n NORMA",
-                                      style: TextStyle(fontSize: 25))),
+                                  child: Text(
+                                "Facturas\nNORMA",
+                                style: TextStyle(fontSize: 20),
+                                textAlign: TextAlign.center,
+                              )),
                             ),
                             Container(
                               height: 200,
                               child: Tab(
-                                  child: Text("Prefacturas\n MARNOR",
-                                      style: TextStyle(fontSize: 25))),
+                                  child: Text(
+                                "Prefacturas\nMARNOR",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                ),
+                                textAlign: TextAlign.center,
+                              )),
                             ),
                             Container(
                               height: 200,
                               child: Tab(
-                                  child: Text("Prefacturas\n NORMA",
-                                      style: TextStyle(fontSize: 25))),
+                                  child: Text(
+                                "Prefacturas\nNORMA",
+                                style: TextStyle(fontSize: 20),
+                                textAlign: TextAlign.center,
+                              )),
                             ),
                           ],
                         ),
