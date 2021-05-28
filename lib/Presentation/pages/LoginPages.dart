@@ -69,7 +69,7 @@ class _LoginPagesState extends State<LoginPages> {
                   textAlign: TextAlign.center,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      hintText: 'Ingrese su contraseña')),
+                      hintText: 'Ingrese su contraseña!!!!!')),
             ),
             Container(
               width: 800,
