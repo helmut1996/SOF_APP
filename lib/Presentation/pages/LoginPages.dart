@@ -53,6 +53,11 @@ class _LoginPagesState extends State<LoginPages> {
             Container(
               width: 800,
               child: TextField(
+                  onSubmitted: (text) {
+                    context
+                        .read<LoginCubit>()
+                        .logIn(textPasswordController.text, context);
+                  },
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly
                   ],
