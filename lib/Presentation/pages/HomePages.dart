@@ -27,131 +27,165 @@ class _HomePageState extends State<HomePages> {
       length: 4,
       child: SafeArea(
         child: Scaffold(
-          body: Column(
-            //mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(padding: EdgeInsets.only(top: 50)),
-              Center(
-                child: Container(
-                    width: 700,
-                    height: 50,
-                    color: Color(0xFFd4d7dd),
-                    child: PreferredSize(
-                      preferredSize: new Size(700, 200),
+          body: NestedScrollView(
+              headerSliverBuilder: (context, value) {
+                return [
+                  SliverToBoxAdapter(
+                      child: Padding(padding: EdgeInsets.only(top: 50))),
+                  SliverToBoxAdapter(
+                    child: Center(
                       child: Container(
-                        height: 200,
-                        child: TabBar(
-                          indicatorColor: Color(0xFFd4d7dd),
-                          unselectedLabelColor: Colors.grey,
-                          tabs: <Widget>[
-                            Container(
+                          width: 700,
+                          height: 50,
+                          color: Color(0xFFd4d7dd),
+                          child: PreferredSize(
+                            preferredSize: new Size(700, 200),
+                            child: Container(
                               height: 200,
-                              child: Tab(
-                                  child: Text(
-                                "Facturas\nMARNOR",
-                                style: TextStyle(fontSize: 20),
-                                textAlign: TextAlign.center,
-                              )),
+                              color: Colors.black,
+                              child: TabBar(
+                                indicatorColor: Color(0xFFd4d7dd),
+                                //unselectedLabelColor: Colors.,
+                                tabs: <Widget>[
+                                  Container(
+                                    height: 200,
+                                    child: Tab(
+                                        child: Text(
+                                      "Facturas\nMARNOR",
+                                      style: TextStyle(fontSize: 20),
+                                      textAlign: TextAlign.center,
+                                    )),
+                                  ),
+                                  Container(
+                                    height: 200,
+                                    child: Tab(
+                                        child: Text(
+                                      "Facturas\nNORMA",
+                                      style: TextStyle(fontSize: 20),
+                                      textAlign: TextAlign.center,
+                                    )),
+                                  ),
+                                  Container(
+                                    height: 200,
+                                    child: Tab(
+                                        child: Text(
+                                      "Prefacturas\nMARNOR",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    )),
+                                  ),
+                                  Container(
+                                    height: 200,
+                                    child: Tab(
+                                        child: Text(
+                                      "Prefacturas\nNORMA",
+                                      style: TextStyle(fontSize: 20),
+                                      textAlign: TextAlign.center,
+                                    )),
+                                  ),
+                                ],
+                              ),
                             ),
-                            Container(
-                              height: 200,
-                              child: Tab(
-                                  child: Text(
-                                "Facturas\nNORMA",
-                                style: TextStyle(fontSize: 20),
-                                textAlign: TextAlign.center,
-                              )),
-                            ),
-                            Container(
-                              height: 200,
-                              child: Tab(
-                                  child: Text(
-                                "Prefacturas\nMARNOR",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                ),
-                                textAlign: TextAlign.center,
-                              )),
-                            ),
-                            Container(
-                              height: 200,
-                              child: Tab(
-                                  child: Text(
-                                "Prefacturas\nNORMA",
-                                style: TextStyle(fontSize: 20),
-                                textAlign: TextAlign.center,
-                              )),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-
-                    /*
-                  CupertinoTabBar.CupertinoTabBar(
-                    const Color(0xFFd4d7dd),
-                    const Color(0xFFf7f7f7),
-                    [
-                      Container(
-                        decoration: BoxDecoration(color: Colors.black),
-                        child: const Text(
-                          "Facturas\n MARNOR",
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 23,
-                            fontWeight: FontWeight.w400,
-                            fontFamily: "SFProRounded",
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      const Text(
-                        "Facturas\n NORMA",
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 23,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: "SFProRounded",
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const Text(
-                        "Prefacturas\n MARNOR",
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 23,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: "SFProRounded",
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const Text(
-                        "Prefacturas\n Norma",
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 23,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: "SFProRounded",
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                    cupertinoTabBarValueGetter,
-                    (int index) {
-                      setState(() {
-                        cupertinoTabBarValue = index;
-                      });
-                    },
-                    useShadow: false,
-                    innerHorizontalPadding: 5,
-                  ),*/
+                          )),
                     ),
+                  ),
+                  SliverToBoxAdapter(
+                      child: Padding(padding: EdgeInsets.only(top: 50)))
+                ];
+              },
+              body: TabBarView(
+                children: <Widget>[
+                  _TableGenerator(type: "FacturasMarnor"),
+                  _TableGenerator(type: "FacturasNorma"),
+                  _TableGenerator(type: "PreFacturasMarnor"),
+                  _TableGenerator(type: "FacturasNorma"),
+                ],
+              )),
+        ),
+      ),
+    );
+  }
+}
+
+class _TableGenerator extends StatelessWidget {
+  String type;
+  _TableGenerator({
+    required this.type,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          width: MediaQuery.of(context).size.width * 0.9,
+          decoration: BoxDecoration(color: Colors.white),
+          child: DataTable(
+            columns: const <DataColumn>[
+              DataColumn(
+                label: Text(
+                  'Name',
+                  style: TextStyle(fontStyle: FontStyle.italic),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'Age',
+                  style: TextStyle(fontStyle: FontStyle.italic),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'Role',
+                  style: TextStyle(fontStyle: FontStyle.italic),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'Role',
+                  style: TextStyle(fontStyle: FontStyle.italic),
+                ),
+              ),
+            ],
+            rows: const <DataRow>[
+              DataRow(
+                cells: <DataCell>[
+                  DataCell(Text('Sarah')),
+                  DataCell(Text('19')),
+                  DataCell(Text('Student')),
+                  DataCell(Text('Student')),
+                ],
+              ),
+              DataRow(
+                cells: <DataCell>[
+                  DataCell(Text('Janine')),
+                  DataCell(Text('43')),
+                  DataCell(Text('Professor')),
+                  DataCell(Text('Student')),
+                ],
+              ),
+              DataRow(
+                cells: <DataCell>[
+                  DataCell(Text('William')),
+                  DataCell(Text('27')),
+                  DataCell(Text('Associate Professor')),
+                  DataCell(Text('Student')),
+                ],
+              ),
+              DataRow(
+                cells: <DataCell>[
+                  DataCell(Text('William')),
+                  DataCell(Text('27')),
+                  DataCell(Text('Associate Professor')),
+                  DataCell(Text('Student')),
+                ],
               ),
             ],
           ),
         ),
-      ),
+      ],
     );
   }
 }
