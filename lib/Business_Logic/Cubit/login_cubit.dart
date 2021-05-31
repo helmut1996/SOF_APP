@@ -12,7 +12,7 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   void initialCheckIfLoggedIn() {
-    emitCheckLogin(LoggedIn.True);
+    emitCheckLogin(LoggedIn.False);
   }
 
   void logIn(String pin, BuildContext context) {
@@ -41,8 +41,8 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   void logOut() {
-    emitCheckLogin(LoggedIn.False);
     emitLoggedOut();
+    emitCheckLogin(LoggedIn.False);
   }
 
   void emitLoggedIn() => emit(LoggedInApp(isLogged: LoggedIn.True));

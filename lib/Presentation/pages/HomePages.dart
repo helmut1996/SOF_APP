@@ -1,6 +1,8 @@
 import 'package:cupertino_tabbar/cupertino_tabbar.dart' as CupertinoTabBar;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:sof_app/Business_Logic/Cubit/login_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePages extends StatefulWidget {
   @override
@@ -28,81 +30,91 @@ class _HomePageState extends State<HomePages> {
       child: SafeArea(
         child: Scaffold(
           body: NestedScrollView(
-              headerSliverBuilder: (context, value) {
-                return [
-                  SliverToBoxAdapter(
-                      child: Padding(padding: EdgeInsets.only(top: 50))),
-                  SliverToBoxAdapter(
-                    child: Center(
-                      child: Container(
-                          width: 700,
-                          height: 50,
-                          color: Color(0xFFd4d7dd),
-                          child: PreferredSize(
-                            preferredSize: new Size(700, 200),
-                            child: Container(
-                              height: 200,
-                              color: Colors.black,
-                              child: TabBar(
-                                indicatorColor: Color(0xFFd4d7dd),
-                                //unselectedLabelColor: Colors.,
-                                tabs: <Widget>[
-                                  Container(
-                                    height: 200,
-                                    child: Tab(
-                                        child: Text(
-                                      "Facturas\nMARNOR",
-                                      style: TextStyle(fontSize: 20),
-                                      textAlign: TextAlign.center,
-                                    )),
-                                  ),
-                                  Container(
-                                    height: 200,
-                                    child: Tab(
-                                        child: Text(
-                                      "Facturas\nNORMA",
-                                      style: TextStyle(fontSize: 20),
-                                      textAlign: TextAlign.center,
-                                    )),
-                                  ),
-                                  Container(
-                                    height: 200,
-                                    child: Tab(
-                                        child: Text(
-                                      "Prefacturas\nMARNOR",
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    )),
-                                  ),
-                                  Container(
-                                    height: 200,
-                                    child: Tab(
-                                        child: Text(
-                                      "Prefacturas\nNORMA",
-                                      style: TextStyle(fontSize: 20),
-                                      textAlign: TextAlign.center,
-                                    )),
-                                  ),
-                                ],
-                              ),
+            headerSliverBuilder: (context, value) {
+              return [
+                SliverToBoxAdapter(
+                    child: Padding(padding: EdgeInsets.only(top: 50))),
+                SliverToBoxAdapter(
+                  child: Center(
+                    child: Container(
+                        width: 700,
+                        height: 50,
+                        color: Color(0xFFd4d7dd),
+                        child: PreferredSize(
+                          preferredSize: new Size(700, 200),
+                          child: Container(
+                            height: 200,
+                            color: Colors.black,
+                            child: TabBar(
+                              indicatorColor: Color(0xFFd4d7dd),
+                              //unselectedLabelColor: Colors.,
+                              tabs: <Widget>[
+                                Container(
+                                  height: 200,
+                                  child: Tab(
+                                      child: Text(
+                                    "Facturas\nMARNOR",
+                                    style: TextStyle(fontSize: 20),
+                                    textAlign: TextAlign.center,
+                                  )),
+                                ),
+                                Container(
+                                  height: 200,
+                                  child: Tab(
+                                      child: Text(
+                                    "Facturas\nNORMA",
+                                    style: TextStyle(fontSize: 20),
+                                    textAlign: TextAlign.center,
+                                  )),
+                                ),
+                                Container(
+                                  height: 200,
+                                  child: Tab(
+                                      child: Text(
+                                    "Prefacturas\nMARNOR",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  )),
+                                ),
+                                Container(
+                                  height: 200,
+                                  child: Tab(
+                                      child: Text(
+                                    "Prefacturas\nNORMA",
+                                    style: TextStyle(fontSize: 20),
+                                    textAlign: TextAlign.center,
+                                  )),
+                                ),
+                              ],
                             ),
-                          )),
-                    ),
+                          ),
+                        )),
                   ),
-                  SliverToBoxAdapter(
-                      child: Padding(padding: EdgeInsets.only(top: 50)))
-                ];
-              },
-              body: TabBarView(
-                children: <Widget>[
-                  _TableGenerator(type: "FacturasMarnor"),
-                  _TableGenerator(type: "FacturasNorma"),
-                  _TableGenerator(type: "PreFacturasMarnor"),
-                  _TableGenerator(type: "FacturasNorma"),
-                ],
-              )),
+                ),
+                SliverToBoxAdapter(
+                    child: Padding(padding: EdgeInsets.only(top: 50)))
+              ];
+            },
+            body: TabBarView(
+              children: <Widget>[
+                _TableGenerator(type: "FacturasMarnor"),
+                _TableGenerator(type: "FacturasNorma"),
+                _TableGenerator(type: "PreFacturasMarnor"),
+                _TableGenerator(type: "FacturasNorma"),
+              ],
+            ),
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              // Add your onPressed code here!
+              context.read<LoginCubit>().logOut();
+              print("TOqueteado");
+            },
+            child: const Icon(Icons.logout),
+            backgroundColor: Colors.green,
+          ),
         ),
       ),
     );
