@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
         ],
         child: BlocBuilder<LoginCubit, LoginState>(
             builder: (context, _loginState) {
+          print(_loginState);
           if (_loginState is LoggedInApp &&
               _loginState.isLogged == LoggedIn.True) {
             _navigator.currentState!.pushNamedAndRemoveUntil('/homepage',
@@ -30,6 +31,11 @@ class MyApp extends StatelessWidget {
           } else if (_loginState.isLogged == LoggedIn.True) {
             firstPage = '/';
             fnFirstPage = HomePages();
+          } else if (_loginState is LoggedOutApp) {
+            firstPage = '/login';
+            fnFirstPage = LoginPages();
+            _navigator.currentState!.pushNamedAndRemoveUntil(
+                '/login', (Route route) => route.settings.name == 'login');
           } else {
             firstPage = '/login';
             fnFirstPage = LoginPages();

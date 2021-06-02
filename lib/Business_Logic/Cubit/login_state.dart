@@ -32,6 +32,10 @@ class LoggedOutApp extends LoginState {
   final LoggedIn isLogged;
 
   LoggedOutApp({required this.isLogged});
+  @override
+  String toString() {
+    return 'LoggedOutApp{isLogged: $isLogged}';
+  }
 }
 
 class LoginError extends LoginState {}
