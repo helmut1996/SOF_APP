@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sof_app/Business_Logic/Cubit/login_cubit.dart';
+import 'package:sof_app/Presentation/pages/reloj.dart';
 import 'package:timer_builder/timer_builder.dart';
 import 'package:intl/intl.dart';
 
@@ -12,11 +13,6 @@ class LoginPages extends StatefulWidget {
 }
 
 class _LoginPagesState extends State<LoginPages> {
-  String getSystemTime() {
-    var now = new DateTime.now();
-    return new DateFormat().add_jms().format(now);
-  }
-
   final textPasswordController = TextEditingController();
   @override
   void initState() {
@@ -89,19 +85,7 @@ class _LoginPagesState extends State<LoginPages> {
               ),
             ),
             Align(
-              alignment: FractionalOffset.bottomCenter,
-              child: SingleChildScrollView(
-                child: TimerBuilder.periodic(Duration(seconds: 1),
-                    builder: (context) {
-                  return Text(
-                    "${getSystemTime()}",
-                    style: TextStyle(
-                        color: Color(0xff2d386b),
-                        fontSize: 30,
-                        fontWeight: FontWeight.w700),
-                  );
-                }),
-              ),
+              child: Reloj(),
             )
           ],
         ),

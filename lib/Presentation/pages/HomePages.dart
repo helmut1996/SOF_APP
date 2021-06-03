@@ -1,8 +1,10 @@
 import 'package:cupertino_tabbar/cupertino_tabbar.dart' as CupertinoTabBar;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:sof_app/Business_Logic/Cubit/login_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sof_app/Presentation/pages/reloj.dart';
 
 class HomePages extends StatefulWidget {
   @override
@@ -10,6 +12,11 @@ class HomePages extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePages> {
+  String getSystemTime() {
+    var now = new DateTime.now();
+    return new DateFormat().add_jms().format(now);
+  }
+
   int cupertinoTabBarValue = 0;
   int cupertinoTabBarValueGetter() => cupertinoTabBarValue;
 
