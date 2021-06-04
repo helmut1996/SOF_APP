@@ -139,31 +139,52 @@ class _TableGenerator extends StatelessWidget {
     return Column(
       children: [
         Container(
+          margin: EdgeInsets.only(bottom: 20),
+          child: Reloj(),
+        ),
+        Container(
+            padding: EdgeInsets.only(left: 350, right: 350, bottom: 20),
+            child: TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'Buscar Factura',
+              ),
+            )),
+        Container(
           width: MediaQuery.of(context).size.width * 0.9,
           decoration: BoxDecoration(color: Colors.white),
           child: DataTable(
             columns: const <DataColumn>[
               DataColumn(
                 label: Text(
-                  'Name',
+                  'No.FacturaCliente',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
               DataColumn(
                 label: Text(
-                  'Age',
+                  'Nombre Fact',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
               DataColumn(
                 label: Text(
-                  'Role',
+                  'Vendedor',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
               DataColumn(
                 label: Text(
-                  'Role',
+                  'Total',
+                  style: TextStyle(fontStyle: FontStyle.italic),
+                ),
+              ),
+              DataColumn(
+                  label: Text('Fecha',
+                      style: TextStyle(fontStyle: FontStyle.italic))),
+              DataColumn(
+                label: Text(
+                  'Tipo Compra',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
@@ -175,6 +196,8 @@ class _TableGenerator extends StatelessWidget {
                   DataCell(Text('19')),
                   DataCell(Text('Student')),
                   DataCell(Text('Student')),
+                  DataCell(Text('Student')),
+                  DataCell(Text('Student')),
                 ],
               ),
               DataRow(
@@ -183,13 +206,7 @@ class _TableGenerator extends StatelessWidget {
                   DataCell(Text('43')),
                   DataCell(Text('Professor')),
                   DataCell(Text('Student')),
-                ],
-              ),
-              DataRow(
-                cells: <DataCell>[
-                  DataCell(Text('William')),
-                  DataCell(Text('27')),
-                  DataCell(Text('Associate Professor')),
+                  DataCell(Text('Student')),
                   DataCell(Text('Student')),
                 ],
               ),
@@ -198,6 +215,18 @@ class _TableGenerator extends StatelessWidget {
                   DataCell(Text('William')),
                   DataCell(Text('27')),
                   DataCell(Text('Associate Professor')),
+                  DataCell(Text('Student')),
+                  DataCell(Text('Student')),
+                  DataCell(Text('Student')),
+                ],
+              ),
+              DataRow(
+                cells: <DataCell>[
+                  DataCell(Text('William')),
+                  DataCell(Text('27')),
+                  DataCell(Text('Associate Professor')),
+                  DataCell(Text('Student')),
+                  DataCell(Text('Student')),
                   DataCell(Text('Student')),
                 ],
               ),
