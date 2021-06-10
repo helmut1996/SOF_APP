@@ -155,13 +155,15 @@ class _TableGenerator extends StatelessWidget {
           width: MediaQuery.of(context).size.width * 0.9,
           decoration: BoxDecoration(color: Colors.white),
           child: DataTable(
+            sortColumnIndex: 0,
+            sortAscending: true,
             columns: const <DataColumn>[
               DataColumn(
-                label: Text(
-                  'No.FacturaCliente',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
+                  label: Text(
+                    'No.FacturaCliente',
+                    style: TextStyle(fontStyle: FontStyle.italic),
+                  ),
+                  numeric: true),
               DataColumn(
                 label: Text(
                   'Nombre Fact',
@@ -181,11 +183,20 @@ class _TableGenerator extends StatelessWidget {
                 ),
               ),
               DataColumn(
-                  label: Text('Fecha',
-                      style: TextStyle(fontStyle: FontStyle.italic))),
+                label: Text(
+                  'Fecha',
+                  style: TextStyle(fontStyle: FontStyle.italic),
+                ),
+              ),
               DataColumn(
                 label: Text(
                   'Tipo Compra',
+                  style: TextStyle(fontStyle: FontStyle.italic),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'Acciones',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
@@ -199,6 +210,7 @@ class _TableGenerator extends StatelessWidget {
                   DataCell(Text('Student')),
                   DataCell(Text('Student')),
                   DataCell(Text('Student')),
+                  DataCell(Icon(Icons.ac_unit_outlined))
                 ],
               ),
               DataRow(
@@ -209,6 +221,7 @@ class _TableGenerator extends StatelessWidget {
                   DataCell(Text('Student')),
                   DataCell(Text('Student')),
                   DataCell(Text('Student')),
+                  DataCell(Icon(Icons.view_list_outlined))
                 ],
               ),
               DataRow(
@@ -219,6 +232,7 @@ class _TableGenerator extends StatelessWidget {
                   DataCell(Text('Student')),
                   DataCell(Text('Student')),
                   DataCell(Text('prueba')),
+                  DataCell(Icon(Icons.view_list_outlined))
                 ],
               ),
               DataRow(
@@ -229,6 +243,9 @@ class _TableGenerator extends StatelessWidget {
                   DataCell(Text('Student')),
                   DataCell(Text('Student')),
                   DataCell(Text('Prueba')),
+                  DataCell(
+                    Icon(Icons.view_list_outlined),
+                  )
                 ],
               ),
             ],
