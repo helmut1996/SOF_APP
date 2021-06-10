@@ -139,17 +139,18 @@ class _TableGenerator extends StatelessWidget {
     return Column(
       children: [
         Container(
-          margin: EdgeInsets.only(bottom: 20),
+          margin: EdgeInsets.only(bottom: 10),
           child: Reloj(),
         ),
         Container(
-            padding: EdgeInsets.only(left: 350, right: 350, bottom: 20),
-            child: TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Buscar Factura',
-              ),
-            )),
+          padding: EdgeInsets.only(left: 350, right: 350, bottom: 20),
+          child: TextField(
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: 'Buscar Factura',
+            ),
+          ),
+        ),
         Container(
           width: MediaQuery.of(context).size.width * 0.9,
           decoration: BoxDecoration(color: Colors.white),
@@ -217,7 +218,7 @@ class _TableGenerator extends StatelessWidget {
                   DataCell(Text('Associate Professor')),
                   DataCell(Text('Student')),
                   DataCell(Text('Student')),
-                  DataCell(Text('Student')),
+                  DataCell(Text('prueba')),
                 ],
               ),
               DataRow(
@@ -227,7 +228,7 @@ class _TableGenerator extends StatelessWidget {
                   DataCell(Text('Associate Professor')),
                   DataCell(Text('Student')),
                   DataCell(Text('Student')),
-                  DataCell(Text('Student')),
+                  DataCell(Text('Prueba')),
                 ],
               ),
             ],
