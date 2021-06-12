@@ -132,6 +132,9 @@ class _TableGenerator extends StatelessWidget {
   _TableGenerator({
     required this.type,
   });
+  void clickeado() {
+    print("clikdeado");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -157,7 +160,7 @@ class _TableGenerator extends StatelessWidget {
           child: DataTable(
             sortColumnIndex: 0,
             sortAscending: true,
-            columns: const <DataColumn>[
+            columns: <DataColumn>[
               DataColumn(
                   label: Text(
                     'No.FacturaCliente',
@@ -201,7 +204,7 @@ class _TableGenerator extends StatelessWidget {
                 ),
               ),
             ],
-            rows: const <DataRow>[
+            rows: <DataRow>[
               DataRow(
                 cells: <DataCell>[
                   DataCell(Text('Sarah')),
@@ -221,7 +224,15 @@ class _TableGenerator extends StatelessWidget {
                   DataCell(Text('Student')),
                   DataCell(Text('Student')),
                   DataCell(Text('Student')),
-                  DataCell(Icon(Icons.view_list_outlined))
+                  DataCell(Column(
+                    children: [
+                      GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, "/detallesfactura");
+                          },
+                          child: Icon(Icons.view_list_outlined)),
+                    ],
+                  ))
                 ],
               ),
               DataRow(
