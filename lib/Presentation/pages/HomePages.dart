@@ -117,7 +117,6 @@ class _HomePageState extends State<HomePages> {
             onPressed: () {
               // Add your onPressed code here!
               context.read<LoginCubit>().logOut();
-              print("TOqueteado");
             },
             child: const Icon(Icons.logout),
             backgroundColor: Colors.green,
@@ -151,7 +150,8 @@ class _TableGenerator extends StatelessWidget {
             ),
           ),
         ),
-        Container(
+        Expanded(
+            child: Container(
           width: MediaQuery.of(context).size.width * 0.9,
           decoration: BoxDecoration(color: Colors.white),
           child: DataTable(
@@ -250,7 +250,7 @@ class _TableGenerator extends StatelessWidget {
               ),
             ],
           ),
-        ),
+        )),
       ],
     );
   }
