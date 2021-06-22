@@ -1,10 +1,15 @@
 import 'package:cupertino_tabbar/cupertino_tabbar.dart' as CupertinoTabBar;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:sof_app/Business_Logic/Cubit/login_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sof_app/Presentation/pages/reloj.dart';
+import 'package:sof_app/provaiders/models/modelFacturaCosmetico.dart';
+import 'package:http/http.dart' as http;
+import 'package:async/async.dart';
+import 'package:http/retry.dart';
 
 class HomePages extends StatefulWidget {
   @override
@@ -19,6 +24,21 @@ class _HomePageState extends State<HomePages> {
 
   int cupertinoTabBarValue = 0;
   int cupertinoTabBarValueGetter() => cupertinoTabBarValue;
+  final _FacturaCosmetico = AsyncMemoizer<FacturaCosmetico>();
+
+  //es l clase para la conexion de la api
+  Future<FacturaCosmetico> fetchFacturaCosmetico(int pagNum) =>
+      _FacturaCosmetico.runOnce(() async {
+        final response = await http.get(Uri.parse(
+            "https://192.168.0.100:4100/Apifacturas/listar_facturas_cosmeticos/" +
+                pagNum.toString() +
+                "/?token=ifKZ56rMQdOKmWuDHF"));
+        if (response.statusCode == 200) {
+          return compute(parseFacturaCosmetico, response.body);
+        } else {
+          throw Exception("Failed to load.");
+        }
+      });
 
   @override
   void initState() {

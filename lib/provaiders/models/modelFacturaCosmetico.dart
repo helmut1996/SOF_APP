@@ -4,8 +4,8 @@
 
 import 'dart:convert';
 
-FacturaCosmetico facturaCosmeticoFromJson(String str) =>
-    FacturaCosmetico.fromJson(json.decode(str));
+FacturaCosmetico ParseFacturaCosmetico(String responseBody) =>
+    FacturaCosmetico.fromJson(json.decode(responseBody));
 
 String facturaCosmeticoToJson(FacturaCosmetico data) =>
     json.encode(data.toJson());
