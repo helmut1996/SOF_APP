@@ -35,6 +35,9 @@ dependencies:
   hydrated_bloc: ^7.0.0
   rflutter_alert: ^2.0.2
   cupertino_tabbar: ^2.0.0
+  http: ^0.13.3
+  cached_network_image: ^3.0.0
+
 
 
 dev_dependencies:

@@ -9,7 +9,22 @@ import 'package:sof_app/Presentation/pages/reloj.dart';
 import 'package:sof_app/provaiders/models/modelFacturaCosmetico.dart';
 import 'package:http/http.dart' as http;
 import 'package:async/async.dart';
-import 'package:http/retry.dart';
+//import 'package:http/retry.dart';
+
+final _FacturaCosmetico = AsyncMemoizer<FacturaCosmetico>();
+//es la clase para la conexion de la api
+Future<FacturaCosmetico> fetchFacturaCosmetico(int pagNum) =>
+    _FacturaCosmetico.runOnce(() async {
+      final response = await http.get(Uri.parse(
+          "https://192.168.0.100:4100/Apifacturas/listar_facturas_cosmeticos/" +
+              pagNum.toString() +
+              "/?token=ifKZ56rMQdOKmWuDHF"));
+      if (response.statusCode == 200) {
+        return compute(ParseFacturaCosmetico, response.body);
+      } else {
+        throw Exception("Failed to load.");
+      }
+    });
 
 class HomePages extends StatefulWidget {
   @override
@@ -24,21 +39,6 @@ class _HomePageState extends State<HomePages> {
 
   int cupertinoTabBarValue = 0;
   int cupertinoTabBarValueGetter() => cupertinoTabBarValue;
-  final _FacturaCosmetico = AsyncMemoizer<FacturaCosmetico>();
-
-  //es l clase para la conexion de la api
-  Future<FacturaCosmetico> fetchFacturaCosmetico(int pagNum) =>
-      _FacturaCosmetico.runOnce(() async {
-        final response = await http.get(Uri.parse(
-            "https://192.168.0.100:4100/Apifacturas/listar_facturas_cosmeticos/" +
-                pagNum.toString() +
-                "/?token=ifKZ56rMQdOKmWuDHF"));
-        if (response.statusCode == 200) {
-          return compute(parseFacturaCosmetico, response.body);
-        } else {
-          throw Exception("Failed to load.");
-        }
-      });
 
   @override
   void initState() {
@@ -78,9 +78,23 @@ class _HomePageState extends State<HomePages> {
                               tabs: <Widget>[
                                 Container(
                                   height: 200,
+                                  child: Column(
+                                    children: [
+                                      Tab(
+                                        child: Text(
+                                          "Facturas\nCOSMETICOS",
+                                          style: TextStyle(fontSize: 20),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  height: 200,
                                   child: Tab(
                                       child: Text(
-                                    "Facturas\nMARNOR",
+                                    "PreFactura\nCOSMETICO",
                                     style: TextStyle(fontSize: 20),
                                     textAlign: TextAlign.center,
                                   )),
@@ -89,16 +103,7 @@ class _HomePageState extends State<HomePages> {
                                   height: 200,
                                   child: Tab(
                                       child: Text(
-                                    "Facturas\nNORMA",
-                                    style: TextStyle(fontSize: 20),
-                                    textAlign: TextAlign.center,
-                                  )),
-                                ),
-                                Container(
-                                  height: 200,
-                                  child: Tab(
-                                      child: Text(
-                                    "Prefacturas\nMARNOR",
+                                    "FACTURA\nLIBRERIA",
                                     style: TextStyle(
                                       fontSize: 20,
                                     ),
@@ -109,7 +114,7 @@ class _HomePageState extends State<HomePages> {
                                   height: 200,
                                   child: Tab(
                                       child: Text(
-                                    "Prefacturas\nNORMA",
+                                    "Facturas\nCARPINTERO",
                                     style: TextStyle(fontSize: 20),
                                     textAlign: TextAlign.center,
                                   )),
@@ -149,6 +154,7 @@ class _HomePageState extends State<HomePages> {
 
 class _TableGenerator extends StatelessWidget {
   String type;
+
   _TableGenerator({
     required this.type,
   });
@@ -173,6 +179,15 @@ class _TableGenerator extends StatelessWidget {
             ),
           ),
         ),
+        FutureBuilder(
+            future: fetchFacturaCosmetico(1),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else {
+                return _TableGenerator(type: "FacturasMarnor");
+              }
+            }),
         Expanded(
             child: Container(
           width: MediaQuery.of(context).size.width * 0.9,
