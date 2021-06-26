@@ -179,6 +179,7 @@ class _TableGenerator extends StatelessWidget {
             ),
           ),
         ),
+        /*
         FutureBuilder(
             future: fetchFacturaCosmetico(1),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -187,7 +188,7 @@ class _TableGenerator extends StatelessWidget {
               } else {
                 return _TableGenerator(type: "FacturasMarnor");
               }
-            }),
+            }),*/
         Expanded(
             child: Container(
           width: MediaQuery.of(context).size.width * 0.9,
