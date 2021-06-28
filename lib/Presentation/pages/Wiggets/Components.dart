@@ -1,7 +1,30 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:sof_app/provaiders/models/modelDetalleFactura.dart';
+import 'package:http/http.dart' as http;
+import 'package:async/async.dart';
 
-class Textos extends StatelessWidget {
+final _DetalleFacturaCosmetico = AsyncMemoizer<DetalleFacturaCosmeticos>();
+
+//es la clase para la conexion de la api FacturaCosmeticos
+Future<DetalleFacturaCosmeticos> fetchDetalleFacturaCosmetico() =>
+    _DetalleFacturaCosmetico.runOnce(() async {
+      final response = await http.get(Uri.parse(
+          "https://apimarnor.garajestore.com/Apifacturas/info_factura_cosmetico/50517/?token=ifKZ56rMQdOKmWuDHF"));
+      if (response.statusCode == 200) {
+        return compute(ParsedetalleFacturaCosmeticos, response.body);
+      } else {
+        throw Exception("Failed to load.");
+      }
+    });
+
+class Textos extends StatefulWidget {
+  @override
+  _TextosState createState() => _TextosState();
+}
+
+class _TextosState extends State<Textos> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
