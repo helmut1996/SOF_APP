@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-FacturaLibreria facturaLibreriaFromJson(String str) =>
-    FacturaLibreria.fromJson(json.decode(str));
+FacturaLibreria ParseFacturaLibreria(String responseBody) =>
+    FacturaLibreria.fromJson(json.decode(responseBody));
 
 String facturaLibreriaToJson(FacturaLibreria data) =>
     json.encode(data.toJson());

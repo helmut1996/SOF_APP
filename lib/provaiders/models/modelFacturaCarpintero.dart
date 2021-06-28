@@ -4,8 +4,8 @@
 
 import 'dart:convert';
 
-FacturaCarpintero facturaCarpinteroFromJson(String str) =>
-    FacturaCarpintero.fromJson(json.decode(str));
+FacturaCarpintero ParseFacturaCarpintero(String responseBody) =>
+    FacturaCarpintero.fromJson(json.decode(responseBody));
 
 String facturaCarpinteroToJson(FacturaCarpintero data) =>
     json.encode(data.toJson());

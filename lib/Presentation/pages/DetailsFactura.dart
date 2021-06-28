@@ -19,6 +19,7 @@ class _DetailsFacturaState extends State<DetailsFactura> {
       body: Column(
         children: [
           Textos(),
+          Divider(),
           Container(
             child: Center(
               child: DataTable(

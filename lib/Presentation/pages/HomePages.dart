@@ -6,13 +6,18 @@ import 'package:intl/intl.dart';
 import 'package:sof_app/Business_Logic/Cubit/login_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sof_app/Presentation/pages/reloj.dart';
+import 'package:sof_app/provaiders/models/modelFacturaCarpintero.dart';
 import 'package:sof_app/provaiders/models/modelFacturaCosmetico.dart';
 import 'package:http/http.dart' as http;
 import 'package:async/async.dart';
+import 'package:sof_app/provaiders/models/modelFacturaLibreria.dart';
 //import 'package:http/retry.dart';
 
 final _FacturaCosmetico = AsyncMemoizer<FacturaCosmetico>();
-//es la clase para la conexion de la api
+final _FacturaCarpintero = AsyncMemoizer<FacturaCarpintero>();
+final _FacturaLibreria = AsyncMemoizer<FacturaLibreria>();
+
+//es la clase para la conexion de la api FacturaCosmeticos
 Future<FacturaCosmetico> fetchFacturaCosmetico(int pagNum) =>
     _FacturaCosmetico.runOnce(() async {
       final response = await http.get(Uri.parse(
@@ -21,6 +26,33 @@ Future<FacturaCosmetico> fetchFacturaCosmetico(int pagNum) =>
               "/?token=ifKZ56rMQdOKmWuDHF"));
       if (response.statusCode == 200) {
         return compute(ParseFacturaCosmetico, response.body);
+      } else {
+        throw Exception("Failed to load.");
+      }
+    });
+
+//es la clase para la conexion de la api FacturaCarpintero
+Future<FacturaCarpintero> fetchFacturaCarpintero(int pagNum) =>
+    _FacturaCarpintero.runOnce(() async {
+      final response = await http.get(Uri.parse(
+          "https://apimarnor.garajestore.com/Apifacturas/listar_facturas_carpintero/" +
+              pagNum.toString() +
+              "/?token=ifKZ56rMQdOKmWuDHF"));
+      if (response.statusCode == 200) {
+        return compute(ParseFacturaCarpintero, response.body);
+      } else {
+        throw Exception("Failed to load.");
+      }
+    });
+//es la clase para la conexion de la api FacturaLibreria
+Future<FacturaLibreria> fetchFacturaLibreria(int pagNum) =>
+    _FacturaLibreria.runOnce(() async {
+      final response = await http.get(Uri.parse(
+          "https://apimarnor.garajestore.com/Apifacturas/listar_facturas_libreria/" +
+              pagNum.toString() +
+              "/?token=ifKZ56rMQdOKmWuDHF"));
+      if (response.statusCode == 200) {
+        return compute(ParseFacturaLibreria, response.body);
       } else {
         throw Exception("Failed to load.");
       }
@@ -173,10 +205,10 @@ class _TableGenerator extends StatelessWidget {
         facturaFuture = fetchFacturaCosmetico(1);
         break;
       case 'FacturasLibreria':
-        facturaFuture = fetchFacturaCosmetico(1);
+        facturaFuture = fetchFacturaLibreria(1);
         break;
       case 'FacturasCarpintero':
-        facturaFuture = fetchFacturaCosmetico(1);
+        facturaFuture = fetchFacturaCarpintero(1);
         break;
     }
     return Column(
@@ -211,7 +243,24 @@ class _TableGenerator extends StatelessWidget {
                     DataCell(Text(factura.total)),
                     DataCell(Text(factura.createdAt.date.toString())),
                     DataCell(Text(factura.tipoCompra)),
-                    DataCell(Icon(Icons.ac_unit_outlined))
+                    DataCell(
+                      Container(
+                        margin: EdgeInsets.only(top: 8),
+                        child: Column(
+                          children: [
+                            GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                      context, "/detallesfactura");
+                                },
+                                child: Icon(
+                                  Icons.list_alt,
+                                  size: 35,
+                                )),
+                          ],
+                        ),
+                      ),
+                    )
                   ]));
                 });
                 return Expanded(
@@ -256,7 +305,7 @@ class _TableGenerator extends StatelessWidget {
                           ),
                           DataColumn(
                             label: Text(
-                              'Tipo Compra',
+                              'TipoC',
                               style: TextStyle(fontStyle: FontStyle.italic),
                             ),
                           ),
