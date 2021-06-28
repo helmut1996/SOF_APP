@@ -16,7 +16,7 @@ final _FacturaCosmetico = AsyncMemoizer<FacturaCosmetico>();
 Future<FacturaCosmetico> fetchFacturaCosmetico(int pagNum) =>
     _FacturaCosmetico.runOnce(() async {
       final response = await http.get(Uri.parse(
-          "https://192.168.0.100:4100/Apifacturas/listar_facturas_cosmeticos/" +
+          "https://apimarnor.garajestore.com/Apifacturas/listar_facturas_cosmeticos/" +
               pagNum.toString() +
               "/?token=ifKZ56rMQdOKmWuDHF"));
       if (response.statusCode == 200) {
@@ -179,125 +179,140 @@ class _TableGenerator extends StatelessWidget {
             ),
           ),
         ),
-        /*
         FutureBuilder(
             future: fetchFacturaCosmetico(1),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
               } else {
-                return _TableGenerator(type: "FacturasMarnor");
+                //return _TableGenerator(type: "FacturasMarnor");
+                var databody = snapshot.data.facturas;
+                List<DataRow> rows = [];
+                databody.forEach((factura) {
+                  rows.add(DataRow(cells: <DataCell>[
+                    DataCell(Text(factura.idFactura.toString())),
+                    DataCell(Text(factura.cliente)),
+                    DataCell(Text(factura.vendedor)),
+                    DataCell(Text(factura.total)),
+                    DataCell(Text(factura.createdAt.date.toString())),
+                    DataCell(Text(factura.tipoCompra)),
+                    DataCell(Icon(Icons.ac_unit_outlined))
+                  ]));
+                });
+                return Expanded(
+                    child: Container(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  decoration: BoxDecoration(color: Colors.white),
+                  child: DataTable(
+                      sortColumnIndex: 0,
+                      sortAscending: true,
+                      columns: <DataColumn>[
+                        DataColumn(
+                            label: Text(
+                              'No.FacturaCliente',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                            ),
+                            numeric: true),
+                        DataColumn(
+                          label: Text(
+                            'Nombre Fact',
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Vendedor',
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Total',
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Fecha',
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Tipo Compra',
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Acciones',
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                      ],
+                      rows: rows
+
+                      /*<DataRow>[
+                      DataRow(
+                        cells: <DataCell>[
+                          DataCell(Text('Sarah')),
+                          DataCell(Text('19')),
+                          DataCell(Text('Student')),
+                          DataCell(Text('Student')),
+                          DataCell(Text('Student')),
+                          DataCell(Text('Student')),
+                          DataCell(Icon(Icons.ac_unit_outlined))
+                        ],
+                      ),
+                      DataRow(
+                        cells: <DataCell>[
+                          DataCell(Text('Janine')),
+                          DataCell(Text('43')),
+                          DataCell(Text('Professor')),
+                          DataCell(Text('Student')),
+                          DataCell(Text('Student')),
+                          DataCell(Text('Student')),
+                          DataCell(Column(
+                            children: [
+                              GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                        context, "/detallesfactura");
+                                  },
+                                  child: Icon(Icons.view_list_outlined)),
+                            ],
+                          ))
+                        ],
+                      ),
+                      DataRow(
+                        cells: <DataCell>[
+                          DataCell(Text('William')),
+                          DataCell(Text('27')),
+                          DataCell(Text('Associate Professor')),
+                          DataCell(Text('Student')),
+                          DataCell(Text('Student')),
+                          DataCell(Text('prueba')),
+                          DataCell(Icon(Icons.view_list_outlined))
+                        ],
+                      ),
+                      DataRow(
+                        cells: <DataCell>[
+                          DataCell(Text('William')),
+                          DataCell(Text('27')),
+                          DataCell(Text('Associate Professor')),
+                          DataCell(Text('Student')),
+                          DataCell(Text('Student')),
+                          DataCell(Text('Prueba')),
+                          DataCell(
+                            Icon(Icons.view_list_outlined),
+                          )
+                        ],
+                      ),
+                    ],*/
+                      ),
+                ));
               }
-            }),*/
-        Expanded(
-            child: Container(
-          width: MediaQuery.of(context).size.width * 0.9,
-          decoration: BoxDecoration(color: Colors.white),
-          child: DataTable(
-            sortColumnIndex: 0,
-            sortAscending: true,
-            columns: <DataColumn>[
-              DataColumn(
-                  label: Text(
-                    'No.FacturaCliente',
-                    style: TextStyle(fontStyle: FontStyle.italic),
-                  ),
-                  numeric: true),
-              DataColumn(
-                label: Text(
-                  'Nombre Fact',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-              DataColumn(
-                label: Text(
-                  'Vendedor',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-              DataColumn(
-                label: Text(
-                  'Total',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-              DataColumn(
-                label: Text(
-                  'Fecha',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-              DataColumn(
-                label: Text(
-                  'Tipo Compra',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-              DataColumn(
-                label: Text(
-                  'Acciones',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ],
-            rows: <DataRow>[
-              DataRow(
-                cells: <DataCell>[
-                  DataCell(Text('Sarah')),
-                  DataCell(Text('19')),
-                  DataCell(Text('Student')),
-                  DataCell(Text('Student')),
-                  DataCell(Text('Student')),
-                  DataCell(Text('Student')),
-                  DataCell(Icon(Icons.ac_unit_outlined))
-                ],
-              ),
-              DataRow(
-                cells: <DataCell>[
-                  DataCell(Text('Janine')),
-                  DataCell(Text('43')),
-                  DataCell(Text('Professor')),
-                  DataCell(Text('Student')),
-                  DataCell(Text('Student')),
-                  DataCell(Text('Student')),
-                  DataCell(Column(
-                    children: [
-                      GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(context, "/detallesfactura");
-                          },
-                          child: Icon(Icons.view_list_outlined)),
-                    ],
-                  ))
-                ],
-              ),
-              DataRow(
-                cells: <DataCell>[
-                  DataCell(Text('William')),
-                  DataCell(Text('27')),
-                  DataCell(Text('Associate Professor')),
-                  DataCell(Text('Student')),
-                  DataCell(Text('Student')),
-                  DataCell(Text('prueba')),
-                  DataCell(Icon(Icons.view_list_outlined))
-                ],
-              ),
-              DataRow(
-                cells: <DataCell>[
-                  DataCell(Text('William')),
-                  DataCell(Text('27')),
-                  DataCell(Text('Associate Professor')),
-                  DataCell(Text('Student')),
-                  DataCell(Text('Student')),
-                  DataCell(Text('Prueba')),
-                  DataCell(
-                    Icon(Icons.view_list_outlined),
-                  )
-                ],
-              ),
-            ],
-          ),
-        )),
+            }),
       ],
     );
   }
