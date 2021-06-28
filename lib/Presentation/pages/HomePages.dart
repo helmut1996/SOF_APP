@@ -132,9 +132,9 @@ class _HomePageState extends State<HomePages> {
             body: TabBarView(
               children: <Widget>[
                 _TableGenerator(type: "FacturasMarnor"),
-                _TableGenerator(type: "FacturasNorma"),
                 _TableGenerator(type: "PreFacturasMarnor"),
-                _TableGenerator(type: "FacturasNorma"),
+                _TableGenerator(type: "FacturasLibreria"),
+                _TableGenerator(type: "FacturasCarpintero"),
               ],
             ),
           ),
@@ -164,6 +164,21 @@ class _TableGenerator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var facturaFuture;
+    switch (type) {
+      case 'FacturasMarnor':
+        facturaFuture = fetchFacturaCosmetico(1);
+        break;
+      case 'PreFacturasMarnor':
+        facturaFuture = fetchFacturaCosmetico(1);
+        break;
+      case 'FacturasLibreria':
+        facturaFuture = fetchFacturaCosmetico(1);
+        break;
+      case 'FacturasCarpintero':
+        facturaFuture = fetchFacturaCosmetico(1);
+        break;
+    }
     return Column(
       children: [
         Container(
@@ -180,7 +195,7 @@ class _TableGenerator extends StatelessWidget {
           ),
         ),
         FutureBuilder(
-            future: fetchFacturaCosmetico(1),
+            future: facturaFuture,
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
@@ -203,113 +218,57 @@ class _TableGenerator extends StatelessWidget {
                     child: Container(
                   width: MediaQuery.of(context).size.width * 0.9,
                   decoration: BoxDecoration(color: Colors.white),
-                  child: DataTable(
-                      sortColumnIndex: 0,
-                      sortAscending: true,
-                      columns: <DataColumn>[
-                        DataColumn(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: DataTable(
+                        sortColumnIndex: 0,
+                        sortAscending: true,
+                        columns: <DataColumn>[
+                          DataColumn(
+                              label: Text(
+                                'No.FacturaCliente',
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                              numeric: true),
+                          DataColumn(
                             label: Text(
-                              'No.FacturaCliente',
+                              'Nombre Fact',
                               style: TextStyle(fontStyle: FontStyle.italic),
                             ),
-                            numeric: true),
-                        DataColumn(
-                          label: Text(
-                            'Nombre Fact',
-                            style: TextStyle(fontStyle: FontStyle.italic),
                           ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Vendedor',
-                            style: TextStyle(fontStyle: FontStyle.italic),
+                          DataColumn(
+                            label: Text(
+                              'Vendedor',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                            ),
                           ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Total',
-                            style: TextStyle(fontStyle: FontStyle.italic),
+                          DataColumn(
+                            label: Text(
+                              'Total',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                            ),
                           ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Fecha',
-                            style: TextStyle(fontStyle: FontStyle.italic),
+                          DataColumn(
+                            label: Text(
+                              'Fecha',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                            ),
                           ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Tipo Compra',
-                            style: TextStyle(fontStyle: FontStyle.italic),
+                          DataColumn(
+                            label: Text(
+                              'Tipo Compra',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                            ),
                           ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Acciones',
-                            style: TextStyle(fontStyle: FontStyle.italic),
+                          DataColumn(
+                            label: Text(
+                              'Acciones',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                            ),
                           ),
-                        ),
-                      ],
-                      rows: rows
-
-                      /*<DataRow>[
-                      DataRow(
-                        cells: <DataCell>[
-                          DataCell(Text('Sarah')),
-                          DataCell(Text('19')),
-                          DataCell(Text('Student')),
-                          DataCell(Text('Student')),
-                          DataCell(Text('Student')),
-                          DataCell(Text('Student')),
-                          DataCell(Icon(Icons.ac_unit_outlined))
                         ],
-                      ),
-                      DataRow(
-                        cells: <DataCell>[
-                          DataCell(Text('Janine')),
-                          DataCell(Text('43')),
-                          DataCell(Text('Professor')),
-                          DataCell(Text('Student')),
-                          DataCell(Text('Student')),
-                          DataCell(Text('Student')),
-                          DataCell(Column(
-                            children: [
-                              GestureDetector(
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                        context, "/detallesfactura");
-                                  },
-                                  child: Icon(Icons.view_list_outlined)),
-                            ],
-                          ))
-                        ],
-                      ),
-                      DataRow(
-                        cells: <DataCell>[
-                          DataCell(Text('William')),
-                          DataCell(Text('27')),
-                          DataCell(Text('Associate Professor')),
-                          DataCell(Text('Student')),
-                          DataCell(Text('Student')),
-                          DataCell(Text('prueba')),
-                          DataCell(Icon(Icons.view_list_outlined))
-                        ],
-                      ),
-                      DataRow(
-                        cells: <DataCell>[
-                          DataCell(Text('William')),
-                          DataCell(Text('27')),
-                          DataCell(Text('Associate Professor')),
-                          DataCell(Text('Student')),
-                          DataCell(Text('Student')),
-                          DataCell(Text('Prueba')),
-                          DataCell(
-                            Icon(Icons.view_list_outlined),
-                          )
-                        ],
-                      ),
-                    ],*/
-                      ),
+                        rows: rows),
+                  ),
                 ));
               }
             }),
