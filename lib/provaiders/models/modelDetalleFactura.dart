@@ -26,21 +26,30 @@ class DetalleFacturaCosmeticos {
 }
 
 class DetalleFactura {
-  DetalleFactura({
-    required this.producto,
-    required this.cantidad,
-    required this.precio,
-  });
+  DetalleFactura(
+      {required this.producto,
+      required this.cantidad,
+      required this.precio,
+      required this.stock,
+      required this.imagenApk,
+      required this.medida,
+      required this.presentacion});
 
   String producto;
   int cantidad;
   double precio;
-
+  int stock;
+  String imagenApk;
+  String medida;
+  String presentacion;
   factory DetalleFactura.fromJson(Map<String, dynamic> json) => DetalleFactura(
-        producto: json["Producto"],
-        cantidad: json["Cantidad"],
-        precio: (json["Precio"]).toDouble(),
-      );
+      producto: json["Producto"],
+      cantidad: json["Cantidad"],
+      precio: (json["Precio"]).toDouble(),
+      stock: json["Stock"],
+      imagenApk: json["ImagenAPK"],
+      medida: json["Medida"],
+      presentacion: json["Presentacion"]);
 }
 
 class InfoFactura {

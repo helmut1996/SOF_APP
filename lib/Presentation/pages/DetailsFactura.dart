@@ -133,9 +133,11 @@ class _DetailsFacturaState extends State<DetailsFactura> {
                                                         producto.producto)),
                                                 content: Column(
                                                   children: [
-                                                    Text("Existencia: 500"),
-                                                    Text('URL CAPTURANDO:' +
-                                                        URL),
+                                                    Text("Existencia:" +
+                                                        producto.stock
+                                                            .toString()),
+                                                    Text('UnidadMedida' +
+                                                        producto.medida),
                                                     Image.network(
                                                       "https://firebasestorage.googleapis.com/v0/b/prueba2-8bf0c.appspot.com/o/logo2.jpg?alt=media&token=8b655399-4cd3-4c8b-b6ab-855280db1e19",
                                                       width: 300,
