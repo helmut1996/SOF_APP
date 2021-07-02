@@ -63,215 +63,27 @@ class DetailsFactura extends StatefulWidget {
   _DetailsFacturaState createState() => _DetailsFacturaState();
 }
 
-/*class _DetailsFacturaState extends State<DetailsFactura> {
-  @override
-  Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-    final double itemHeight = (size.height - kToolbarHeight) / 19;
-    final double itemWidth = size.width / 2;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("No.Factura"),
-      ),
-      body: Column(
-        children: [
-          Column(
-            children: [
-              Divider(),
-              GridView.count(
-                crossAxisCount: 2,
-                physics:
-                    NeverScrollableScrollPhysics(), // to disable GridView's scrolling
-                shrinkWrap: true,
-                childAspectRatio: (itemWidth / itemHeight),
-                children: [
-                  FutureBuilder(
-                      future: fetchDetalleFacturaCosmetico(1),
-                      builder: (BuildContext context, AsyncSnapshot snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Center(child: CircularProgressIndicator());
-                        } else {
-                          return Container();
-                        }
-                      }),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      "Nombre:",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 14.0, fontStyle: FontStyle.italic),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      "No.Factura:",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 14.0, fontStyle: FontStyle.italic),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text(
-                        "Zona: ",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 14.0, fontStyle: FontStyle.italic),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text(
-                        "Vendedor: ",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 14.0, fontStyle: FontStyle.italic),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text(
-                        "Tipo Compra: ",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 14.0, fontStyle: FontStyle.italic),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text(
-                        "Fecha de Emision: ",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 14.0, fontStyle: FontStyle.italic),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text(
-                        "Total Compra: ",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 14.0, fontStyle: FontStyle.italic),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text(
-                        "Tasa de Cambio: ",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 14.0, fontStyle: FontStyle.italic),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Divider(),
-          Container(
-            child: Center(
-              child: DataTable(
-                columns: const <DataColumn>[
-                  DataColumn(
-                    label: Text(
-                      'Producto',
-                      style: TextStyle(fontStyle: FontStyle.italic),
-                    ),
-                  ),
-                  DataColumn(
-                    label: Text(
-                      'Cantidad',
-                      style: TextStyle(fontStyle: FontStyle.italic),
-                    ),
-                  ),
-                  DataColumn(
-                    label: Text(
-                      'Precio',
-                      style: TextStyle(fontStyle: FontStyle.italic),
-                    ),
-                  ),
-                  DataColumn(
-                    label: Text(
-                      'Total',
-                      style: TextStyle(fontStyle: FontStyle.italic),
-                    ),
-                  ),
-                ],
-                rows: const <DataRow>[
-                  DataRow(
-                    cells: <DataCell>[
-                      DataCell(Text('Sarah')),
-                      DataCell(Text('19')),
-                      DataCell(Text('Student')),
-                      DataCell(Text('Student')),
-                    ],
-                  ),
-                  DataRow(
-                    cells: <DataCell>[
-                      DataCell(Text('Janine')),
-                      DataCell(Text('43')),
-                      DataCell(Text('Professor')),
-                      DataCell(Text('Student')),
-                    ],
-                  ),
-                  DataRow(
-                    cells: <DataCell>[
-                      DataCell(Text('William')),
-                      DataCell(Text('27')),
-                      DataCell(Text('Associate Professor')),
-                      DataCell(Text('Student')),
-                    ],
-                  ),
-                  DataRow(
-                    cells: <DataCell>[
-                      DataCell(Text('William')),
-                      DataCell(Text('27')),
-                      DataCell(Text('Associate Professor')),
-                      DataCell(Text('Student')),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}*/
-
 class _DetailsFacturaState extends State<DetailsFactura> {
   var facturaDetalleFuture;
+  var URL;
   @override
   Widget build(BuildContext context) {
     switch (widget.type) {
       case 'FacturasMarnor':
         facturaDetalleFuture = fetchDetalleFacturaCosmetico(widget.idFactura);
+        URL = "http://ferreteriaelcarpintero.com/images/productos/";
         break;
       case 'PreFacturasMarnor':
         facturaDetalleFuture = fetchDetalleFacturaCosmetico(widget.idFactura);
+        URL = "http://ferreteriaelcarpintero.com/images/productos/";
         break;
       case 'FacturasLibreria':
         facturaDetalleFuture = fetchDetalleFacturaLibreria(widget.idFactura);
+        URL = "http://ferreteriaelcarpintero.com/imgesc/";
         break;
       case 'FacturasCarpintero':
         facturaDetalleFuture = fetchDetalleFacturaCarpintero(widget.idFactura);
+        URL = "http://ferreteriaelcarpintero.com/images/carpintero/";
         break;
     }
     var size = MediaQuery.of(context).size;
@@ -279,7 +91,7 @@ class _DetailsFacturaState extends State<DetailsFactura> {
     final double itemWidth = size.width / 2;
     return Scaffold(
       appBar: AppBar(
-        title: Text("No.Factura"),
+        title: Text("No.Factura" + widget.idFactura.toString()),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -306,6 +118,55 @@ class _DetailsFacturaState extends State<DetailsFactura> {
                             DataCell(Text(producto.precio.toString())),
                             DataCell(Text((producto.cantidad * producto.precio)
                                 .toString())),
+                            DataCell(
+                              Container(
+                                margin: EdgeInsets.only(top: 8),
+                                child: Column(
+                                  children: [
+                                    GestureDetector(
+                                        onTap: () => showDialog<String>(
+                                              context: context,
+                                              builder: (BuildContext context) =>
+                                                  AlertDialog(
+                                                title: Center(
+                                                    child: Text(
+                                                        producto.producto)),
+                                                content: Column(
+                                                  children: [
+                                                    Text("Existencia: 500"),
+                                                    Text('URL CAPTURANDO:' +
+                                                        URL),
+                                                    Image.network(
+                                                      "https://firebasestorage.googleapis.com/v0/b/prueba2-8bf0c.appspot.com/o/logo2.jpg?alt=media&token=8b655399-4cd3-4c8b-b6ab-855280db1e19",
+                                                      width: 300,
+                                                      height: 250,
+                                                    ),
+                                                  ],
+                                                ),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    onPressed: () =>
+                                                        Navigator.pop(
+                                                            context, 'Cancel'),
+                                                    child: const Text('Cancel'),
+                                                  ),
+                                                  TextButton(
+                                                    onPressed: () =>
+                                                        Navigator.pop(
+                                                            context, 'OK'),
+                                                    child: const Text('OK'),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                        child: Icon(
+                                          Icons.image,
+                                          size: 35,
+                                        )),
+                                  ],
+                                ),
+                              ),
+                            )
                           ]));
                         });
                         return Container(
@@ -445,6 +306,13 @@ class _DetailsFacturaState extends State<DetailsFactura> {
                                     DataColumn(
                                       label: Text(
                                         'Total',
+                                        style: TextStyle(
+                                            fontStyle: FontStyle.italic),
+                                      ),
+                                    ),
+                                    DataColumn(
+                                      label: Text(
+                                        'Imagen',
                                         style: TextStyle(
                                             fontStyle: FontStyle.italic),
                                       ),
