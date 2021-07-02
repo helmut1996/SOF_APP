@@ -34,12 +34,12 @@ class DetalleFactura {
 
   String producto;
   int cantidad;
-  int precio;
+  double precio;
 
   factory DetalleFactura.fromJson(Map<String, dynamic> json) => DetalleFactura(
         producto: json["Producto"],
         cantidad: json["Cantidad"],
-        precio: json["Precio"],
+        precio: (json["Precio"]).toDouble(),
       );
 }
 
@@ -55,18 +55,18 @@ class InfoFactura {
   });
 
   String tipoCompra;
-  int total;
+  double total;
   String nombreFactura;
-  int tasaDolar;
+  double tasaDolar;
   String vendedor;
   String zona;
   CreatedAt createdAt;
 
   factory InfoFactura.fromJson(Map<String, dynamic> json) => InfoFactura(
         tipoCompra: json["TipoCompra"],
-        total: json["Total"],
+        total: (json["Total"]).toDouble(),
         nombreFactura: json["NombreFactura"],
-        tasaDolar: json["TasaDolar"],
+        tasaDolar: (json["TasaDolar"]).toDouble(),
         vendedor: json["Vendedor"],
         zona: json["Zona"],
         createdAt: CreatedAt.fromJson(json["created_at"]),

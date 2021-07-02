@@ -252,7 +252,7 @@ class _TableGenerator extends StatelessWidget {
                                 onTap: () {
                                   Navigator.pushNamed(
                                       context, "/detallesfactura",
-                                      arguments: factura.idFactura);
+                                      arguments: [factura.idFactura, type]);
                                 },
                                 child: Icon(
                                   Icons.list_alt,

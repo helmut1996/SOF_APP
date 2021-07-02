@@ -14,9 +14,9 @@ class Routes {
       case '/login':
         return MaterialPageRoute(builder: (_) => LoginPages());
       case '/detallesfactura':
-        if (arguments is int) {
+        if (arguments is List) {
           return MaterialPageRoute(
-              builder: (_) => DetailsFactura(idFactura: arguments));
+              builder: (_) => DetailsFactura(idFactura: arguments[0],type: arguments[1]));
         } else {
           return MaterialPageRoute(builder: (_) => HomePages());
         }

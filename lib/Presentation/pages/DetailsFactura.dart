@@ -26,37 +26,38 @@ Future<DetalleFacturaCosmeticos> fetchDetalleFacturaCosmetico(
 }
 
 //es la clase para la conexion de la api DetalleFacturaCarpintero
-Future<DetalleFacturaCosmeticos> fetchDetalleFacturaCarpintero(int idFactura) =>
-    _DetalleFacturaCarpintero.runOnce(() async {
-      final response = await http.get(Uri.parse(
-          "https://apimarnor.garajestore.com/Apifacturas/info_factura_carpintero/" +
-              idFactura.toString() +
-              "/?token=ifKZ56rMQdOKmWuDHF"));
-      if (response.statusCode == 200) {
-        return compute(ParsedetalleFacturaCosmeticos, response.body);
-      } else {
-        throw Exception("Failed to load.");
-      }
-    });
+Future<DetalleFacturaCosmeticos> fetchDetalleFacturaCarpintero(
+    int idFactura) async {
+  final response = await http.get(Uri.parse(
+      "https://apimarnor.garajestore.com/Apifacturas/info_factura_carpintero/" +
+          idFactura.toString() +
+          "/?token=ifKZ56rMQdOKmWuDHF"));
+  if (response.statusCode == 200) {
+    return compute(ParsedetalleFacturaCosmeticos, response.body);
+  } else {
+    throw Exception("Failed to load.");
+  }
+}
 
 //es la clase para la conexion de la api DetalleFacturaLibreria
-Future<DetalleFacturaCosmeticos> fetchDetalleFacturaLibreria(int idFactura) =>
-    _DetalleFacturaLibreria.runOnce(() async {
-      final response = await http.get(Uri.parse(
-          "https://apimarnor.garajestore.com/Apifacturas/info_factura_libreria/" +
-              idFactura.toString() +
-              "/?token=ifKZ56rMQdOKmWuDHF"));
-      if (response.statusCode == 200) {
-        return compute(ParsedetalleFacturaCosmeticos, response.body);
-      } else {
-        throw Exception("Failed to load.");
-      }
-    });
+Future<DetalleFacturaCosmeticos> fetchDetalleFacturaLibreria(
+    int idFactura) async {
+  final response = await http.get(Uri.parse(
+      "https://apimarnor.garajestore.com/Apifacturas/info_factura_libreria/" +
+          idFactura.toString() +
+          "/?token=ifKZ56rMQdOKmWuDHF"));
+  if (response.statusCode == 200) {
+    return compute(ParsedetalleFacturaCosmeticos, response.body);
+  } else {
+    throw Exception("Failed to load.");
+  }
+}
 
 class DetailsFactura extends StatefulWidget {
   final int idFactura;
+  final String type;
 
-  DetailsFactura({required this.idFactura});
+  DetailsFactura({required this.idFactura, required this.type});
 
   @override
   _DetailsFacturaState createState() => _DetailsFacturaState();
@@ -256,8 +257,23 @@ class DetailsFactura extends StatefulWidget {
 }*/
 
 class _DetailsFacturaState extends State<DetailsFactura> {
+  var facturaDetalleFuture;
   @override
   Widget build(BuildContext context) {
+    switch (widget.type) {
+      case 'FacturasMarnor':
+        facturaDetalleFuture = fetchDetalleFacturaCosmetico(widget.idFactura);
+        break;
+      case 'PreFacturasMarnor':
+        facturaDetalleFuture = fetchDetalleFacturaCosmetico(widget.idFactura);
+        break;
+      case 'FacturasLibreria':
+        facturaDetalleFuture = fetchDetalleFacturaLibreria(widget.idFactura);
+        break;
+      case 'FacturasCarpintero':
+        facturaDetalleFuture = fetchDetalleFacturaCarpintero(widget.idFactura);
+        break;
+    }
     var size = MediaQuery.of(context).size;
     final double itemHeight = (size.height - kToolbarHeight) / 19;
     final double itemWidth = size.width / 2;
@@ -272,7 +288,7 @@ class _DetailsFacturaState extends State<DetailsFactura> {
               children: [
                 Divider(),
                 FutureBuilder(
-                    future: fetchDetalleFacturaCosmetico(widget.idFactura),
+                    future: facturaDetalleFuture,
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Center(child: CircularProgressIndicator());
