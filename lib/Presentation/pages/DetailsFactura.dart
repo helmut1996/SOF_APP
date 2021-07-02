@@ -7,23 +7,23 @@ import 'package:http/http.dart' as http;
 import 'package:async/async.dart';
 import 'package:sof_app/provaiders/models/modelFacturaCosmetico.dart';
 
-final _DetalleFacturaCosmetico = AsyncMemoizer<DetalleFacturaCosmeticos>();
+//final _DetalleFacturaCosmetico = AsyncMemoizer<DetalleFacturaCosmeticos>();
 final _DetalleFacturaCarpintero = AsyncMemoizer<DetalleFacturaCosmeticos>();
 final _DetalleFacturaLibreria = AsyncMemoizer<DetalleFacturaCosmeticos>();
 
 //es la clase para la conexion de la api DetalleFacturaCosmeticos
-Future<DetalleFacturaCosmeticos> fetchDetalleFacturaCosmetico(int idFactura) =>
-    _DetalleFacturaCosmetico.runOnce(() async {
-      final response = await http.get(Uri.parse(
-          "https://apimarnor.garajestore.com/Apifacturas/info_factura_cosmetico/" +
-              idFactura.toString() +
-              "/?token=ifKZ56rMQdOKmWuDHF"));
-      if (response.statusCode == 200) {
-        return compute(ParsedetalleFacturaCosmeticos, response.body);
-      } else {
-        throw Exception("Failed to load.");
-      }
-    });
+Future<DetalleFacturaCosmeticos> fetchDetalleFacturaCosmetico(
+    int idFactura) async {
+  final response = await http.get(Uri.parse(
+      "https://apimarnor.garajestore.com/Apifacturas/info_factura_cosmetico/" +
+          idFactura.toString() +
+          "/?token=ifKZ56rMQdOKmWuDHF"));
+  if (response.statusCode == 200) {
+    return compute(ParsedetalleFacturaCosmeticos, response.body);
+  } else {
+    throw Exception("Failed to load.");
+  }
+}
 
 //es la clase para la conexion de la api DetalleFacturaCarpintero
 Future<DetalleFacturaCosmeticos> fetchDetalleFacturaCarpintero(int idFactura) =>
@@ -54,6 +54,10 @@ Future<DetalleFacturaCosmeticos> fetchDetalleFacturaLibreria(int idFactura) =>
     });
 
 class DetailsFactura extends StatefulWidget {
+  final int idFactura;
+
+  DetailsFactura({required this.idFactura});
+
   @override
   _DetailsFacturaState createState() => _DetailsFacturaState();
 }
@@ -261,124 +265,146 @@ class _DetailsFacturaState extends State<DetailsFactura> {
       appBar: AppBar(
         title: Text("No.Factura"),
       ),
-      body: Column(
-        children: [
-          Column(
-            children: [
-              Divider(),
-              FutureBuilder(
-                  future: fetchDetalleFacturaCosmetico(1),
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    } else {
-                      return Container(
-                        child: Column(
-                          children: [
-                            Divider(),
-                            GridView.count(
-                              crossAxisCount: 2,
-                              physics: NeverScrollableScrollPhysics(),
-                              childAspectRatio: (itemWidth / itemHeight),
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "Nombre:",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontSize: 14.0,
-                                        fontStyle: FontStyle.italic),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "No.Factura:22150",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontSize: 14.0,
-                                        fontStyle: FontStyle.italic),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Center(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Column(
+              children: [
+                Divider(),
+                FutureBuilder(
+                    future: fetchDetalleFacturaCosmetico(widget.idFactura),
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      } else {
+                        print(snapshot.connectionState);
+                        print(snapshot);
+                        var infoFactura = snapshot.data.infoFactura[0];
+                        var listaProductos = snapshot.data.detalleFactura;
+                        List<DataRow> rows = [];
+
+                        listaProductos.forEach((producto) {
+                          rows.add(DataRow(cells: <DataCell>[
+                            DataCell(Text(producto.producto)),
+                            DataCell(Text(producto.cantidad.toString())),
+                            DataCell(Text(producto.precio.toString())),
+                            DataCell(Text((producto.cantidad * producto.precio)
+                                .toString())),
+                          ]));
+                        });
+                        return Container(
+                          child: Column(
+                            children: [
+                              Divider(),
+                              GridView.count(
+                                shrinkWrap: true,
+                                crossAxisCount: 2,
+                                physics: NeverScrollableScrollPhysics(),
+                                childAspectRatio: (itemWidth / itemHeight),
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
                                     child: Text(
-                                      "Zona: ",
+                                      "Nombre: " + infoFactura.nombreFactura,
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                           fontSize: 14.0,
                                           fontStyle: FontStyle.italic),
                                     ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Center(
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
                                     child: Text(
-                                      "Vendedor: ",
+                                      "No.Factura: " +
+                                          widget.idFactura.toString(),
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                           fontSize: 14.0,
                                           fontStyle: FontStyle.italic),
                                     ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Center(
-                                    child: Text(
-                                      "Tipo Compra: ",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontSize: 14.0,
-                                          fontStyle: FontStyle.italic),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Center(
+                                      child: Text(
+                                        "Zona: " + infoFactura.zona,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: 14.0,
+                                            fontStyle: FontStyle.italic),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Center(
-                                    child: Text(
-                                      "Fecha de Emision: ",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontSize: 14.0,
-                                          fontStyle: FontStyle.italic),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Center(
+                                      child: Text(
+                                        "Vendedor: " + infoFactura.vendedor,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: 14.0,
+                                            fontStyle: FontStyle.italic),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Center(
-                                    child: Text(
-                                      "Total Compra: ",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontSize: 14.0,
-                                          fontStyle: FontStyle.italic),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Center(
+                                      child: Text(
+                                        "Tipo Compra: " +
+                                            infoFactura.tipoCompra,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: 14.0,
+                                            fontStyle: FontStyle.italic),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Center(
-                                    child: Text(
-                                      "Tasa de Cambio: ",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontSize: 14.0,
-                                          fontStyle: FontStyle.italic),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Center(
+                                      child: Text(
+                                        "Fecha de Emision: " +
+                                            infoFactura.createdAt.date
+                                                .toString(),
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: 14.0,
+                                            fontStyle: FontStyle.italic),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            Container(
-                              child: Center(
-                                child: DataTable(
-                                  columns: const <DataColumn>[
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Center(
+                                      child: Text(
+                                        "Total Compra: C\$" +
+                                            infoFactura.total.toString(),
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: 14.0,
+                                            fontStyle: FontStyle.italic),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Center(
+                                      child: Text(
+                                        "Tasa de Cambio: " +
+                                            infoFactura.tasaDolar.toString(),
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: 14.0,
+                                            fontStyle: FontStyle.italic),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Container(
+                                child: Center(
+                                  child: DataTable(columns: const <DataColumn>[
                                     DataColumn(
                                       label: Text(
                                         'Producto',
@@ -407,52 +433,18 @@ class _DetailsFacturaState extends State<DetailsFactura> {
                                             fontStyle: FontStyle.italic),
                                       ),
                                     ),
-                                  ],
-                                  rows: const <DataRow>[
-                                    DataRow(
-                                      cells: <DataCell>[
-                                        DataCell(Text('Sarah')),
-                                        DataCell(Text('19')),
-                                        DataCell(Text('Student')),
-                                        DataCell(Text('Student')),
-                                      ],
-                                    ),
-                                    DataRow(
-                                      cells: <DataCell>[
-                                        DataCell(Text('Janine')),
-                                        DataCell(Text('43')),
-                                        DataCell(Text('Professor')),
-                                        DataCell(Text('Student')),
-                                      ],
-                                    ),
-                                    DataRow(
-                                      cells: <DataCell>[
-                                        DataCell(Text('William')),
-                                        DataCell(Text('27')),
-                                        DataCell(Text('Associate Professor')),
-                                        DataCell(Text('Student')),
-                                      ],
-                                    ),
-                                    DataRow(
-                                      cells: <DataCell>[
-                                        DataCell(Text('William')),
-                                        DataCell(Text('27')),
-                                        DataCell(Text('Associate Professor')),
-                                        DataCell(Text('Student')),
-                                      ],
-                                    ),
-                                  ],
+                                  ], rows: rows),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-                  }),
-            ],
-          ),
-        ],
+                            ],
+                          ),
+                        );
+                      }
+                    }),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

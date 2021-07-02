@@ -5,6 +5,7 @@ import 'package:sof_app/Presentation/pages/DetailsFactura.dart';
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
+    final arguments = settings.arguments;
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(builder: (_) => HomePages());
@@ -13,7 +14,12 @@ class Routes {
       case '/login':
         return MaterialPageRoute(builder: (_) => LoginPages());
       case '/detallesfactura':
-        return MaterialPageRoute(builder: (_) => DetailsFactura());
+        if (arguments is int) {
+          return MaterialPageRoute(
+              builder: (_) => DetailsFactura(idFactura: arguments));
+        } else {
+          return MaterialPageRoute(builder: (_) => HomePages());
+        }
 
       default:
         return MaterialPageRoute(

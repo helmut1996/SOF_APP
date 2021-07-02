@@ -251,7 +251,8 @@ class _TableGenerator extends StatelessWidget {
                             GestureDetector(
                                 onTap: () {
                                   Navigator.pushNamed(
-                                      context, "/detallesfactura");
+                                      context, "/detallesfactura",
+                                      arguments: factura.idFactura);
                                 },
                                 child: Icon(
                                   Icons.list_alt,
