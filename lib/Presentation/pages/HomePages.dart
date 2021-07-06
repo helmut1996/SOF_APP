@@ -15,14 +15,15 @@ import 'package:sof_app/provaiders/models/modelFacturaCosmetico.dart';
 import 'package:http/http.dart' as http;
 import 'package:async/async.dart';
 import 'package:sof_app/provaiders/models/modelFacturaLibreria.dart';
+//import 'package:http/retry.dart';
 
 final _FacturaCosmetico = AsyncMemoizer<FacturaCosmetico>();
 final _FacturaCarpintero = AsyncMemoizer<FacturaCarpintero>();
 final _FacturaLibreria = AsyncMemoizer<FacturaLibreria>();
 String currentsearchText = "";
-
 final _searchTextController = TextEditingController();
 StreamController<BusquedaFacturas>? streamController;
+final String TipoFactura = '';
 
 //es la clase para la conexion de la api FacturaCosmeticos
 Future<FacturaCosmetico> fetchFacturaCosmetico(int pagNum) =>
@@ -64,8 +65,7 @@ Future<FacturaLibreria> fetchFacturaLibreria(int pagNum) =>
         throw Exception("Failed to load.");
       }
     });
-
-//BusquedaFacturasCoametico
+//BusquedaFacturas
 
 Future<BusquedaFacturas> BusquedaFacturaCosmetico(String busqueda) async {
   final client = RetryClient(http.Client());
@@ -80,29 +80,15 @@ Future<BusquedaFacturas> BusquedaFacturaCosmetico(String busqueda) async {
     client.close();
   }
 }
-
 //BusquedaFacturasCarpintero
+
 Future<BusquedaFacturas> BusquedaFacturaCarpintero(String busqueda) async {
   final client = RetryClient(http.Client());
   try {
     final response = await client.read(Uri.parse(
-        "https://apimarnor.garajestore.com/Apifacturas/buscar_facturas_carpintero" +
+        "https://apimarnor.garajestore.com/Apifacturas/buscar_facturas_carpintero/" +
             busqueda +
-            "?token=ifKZ56rMQdOKmWuDHF"));
-
-    return compute(ParsebusquedaFacturas, response);
-  } finally {
-    client.close();
-  }
-}
-
-Future<BusquedaFacturas> BusquedaFacturaLibreria(String busqueda) async {
-  final client = RetryClient(http.Client());
-  try {
-    final response = await client.read(Uri.parse(
-        "https://apimarnor.garajestore.com/Apifacturas/buscar_facturas_libreria" +
-            busqueda +
-            "?token=ifKZ56rMQdOKmWuDHF"));
+            "/?token=ifKZ56rMQdOKmWuDHF"));
 
     return compute(ParsebusquedaFacturas, response);
   } finally {
@@ -138,12 +124,14 @@ class _HomePageState extends State<HomePages> {
   }
 
   loadsearchresults() async {
+    //Crear un switch
     BusquedaFacturaCosmetico(currentsearchText).then((res) async {
       streamController!.add(res);
       return res;
     });
   }
 
+///////
   @override
   void initState() {
     SystemChrome.setEnabledSystemUIOverlays([]);
