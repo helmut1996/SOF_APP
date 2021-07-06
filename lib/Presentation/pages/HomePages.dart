@@ -22,6 +22,8 @@ final _FacturaLibreria = AsyncMemoizer<FacturaLibreria>();
 String currentsearchText = "";
 
 final _searchTextController = TextEditingController();
+StreamController<BusquedaFacturas>? streamController;
+
 //es la clase para la conexion de la api FacturaCosmeticos
 Future<FacturaCosmetico> fetchFacturaCosmetico(int pagNum) =>
     _FacturaCosmetico.runOnce(() async {
@@ -69,9 +71,9 @@ Future<BusquedaFacturas> BusquedaFacturaCosmetico(String busqueda) async {
   final client = RetryClient(http.Client());
   try {
     final response = await client.read(Uri.parse(
-        "https://apimarnor.garajestore.com/Apifacturas/buscar_facturas_cosmetico" +
+        "https://apimarnor.garajestore.com/Apifacturas/buscar_facturas_cosmetico/" +
             busqueda +
-            "?token=ifKZ56rMQdOKmWuDHF"));
+            "/?token=ifKZ56rMQdOKmWuDHF"));
 
     return compute(ParsebusquedaFacturas, response);
   } finally {
@@ -123,8 +125,8 @@ class _HomePageState extends State<HomePages> {
   int cupertinoTabBarValueGetter() => cupertinoTabBarValue;
 
   //para la busqueda de las facturas
-  StreamController<BusquedaFacturas>? streamController;
-  final _searchTextController = TextEditingController();
+
+  //final _searchTextController = TextEditingController();
   int timestamp =
       (((new DateTime.now()).millisecondsSinceEpoch) / 1000).round();
   int last_search = 0;
@@ -342,120 +344,243 @@ class _TableGenerator extends StatelessWidget {
         Builder(
           builder: (context) {
             if (currentsearchText == "") {
-              return Container(
-                child: FutureBuilder(
-                    future: facturaFuture,
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
-                      } else {
-                        //return _TableGenerator(type: "FacturasMarnor");
-                        var databody = snapshot.data.facturas;
-                        List<DataRow> rows = [];
-                        databody.forEach((factura) {
-                          rows.add(DataRow(cells: <DataCell>[
-                            DataCell(Text(factura.idFactura.toString())),
-                            DataCell(Text(factura.cliente)),
-                            DataCell(Text(factura.vendedor)),
-                            DataCell(Text(factura.total)),
-                            DataCell(Text(factura.createdAt.date.toString())),
-                            DataCell(Text(factura.tipoCompra)),
-                            DataCell(
-                              Container(
-                                margin: EdgeInsets.only(top: 8),
-                                child: Column(
-                                  children: [
-                                    GestureDetector(
-                                        onTap: () {
-                                          Navigator.pushNamed(
-                                              context, "/detallesfactura",
-                                              arguments: [
-                                                factura.idFactura,
-                                                type
-                                              ]);
-                                        },
-                                        child: Icon(
-                                          Icons.list_alt,
-                                          size: 35,
-                                        )),
-                                  ],
-                                ),
-                              ),
-                            )
-                          ]));
-                        });
-                        return Expanded(
-                            child: Container(
-                          width: MediaQuery.of(context).size.width * 0.9,
-                          decoration: BoxDecoration(color: Colors.white),
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.vertical,
-                            child: DataTable(
-                                sortColumnIndex: 0,
-                                sortAscending: true,
-                                columns: <DataColumn>[
-                                  DataColumn(
-                                      label: Text(
-                                        'No.FacturaCliente',
-                                        style: TextStyle(
-                                            fontStyle: FontStyle.italic),
-                                      ),
-                                      numeric: true),
-                                  DataColumn(
-                                    label: Text(
-                                      'Nombre Fact',
-                                      style: TextStyle(
-                                          fontStyle: FontStyle.italic),
-                                    ),
-                                  ),
-                                  DataColumn(
-                                    label: Text(
-                                      'Vendedor',
-                                      style: TextStyle(
-                                          fontStyle: FontStyle.italic),
-                                    ),
-                                  ),
-                                  DataColumn(
-                                    label: Text(
-                                      'Total',
-                                      style: TextStyle(
-                                          fontStyle: FontStyle.italic),
-                                    ),
-                                  ),
-                                  DataColumn(
-                                    label: Text(
-                                      'Fecha',
-                                      style: TextStyle(
-                                          fontStyle: FontStyle.italic),
-                                    ),
-                                  ),
-                                  DataColumn(
-                                    label: Text(
-                                      'TipoC',
-                                      style: TextStyle(
-                                          fontStyle: FontStyle.italic),
-                                    ),
-                                  ),
-                                  DataColumn(
-                                    label: Text(
-                                      'Acciones',
-                                      style: TextStyle(
-                                          fontStyle: FontStyle.italic),
-                                    ),
-                                  ),
-                                ],
-                                rows: rows),
-                          ),
-                        ));
-                      }
-                    }),
-              );
+              return facturasTableFuture(
+                  futurewidget: facturaFuture, type: type);
             } else {
-              return Container();
+              return facturasTableSearch(type: type);
             }
           },
         ),
       ],
     );
+  }
+}
+
+class facturasTableFuture extends StatelessWidget {
+  final Future futurewidget;
+  final String type;
+
+  const facturasTableFuture(
+      {Key? key, required this.futurewidget, required this.type})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: FutureBuilder(
+          future: futurewidget,
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else {
+              //return _TableGenerator(type: "FacturasMarnor");
+              var databody = snapshot.data.facturas;
+              List<DataRow> rows = [];
+              databody.forEach((factura) {
+                rows.add(DataRow(cells: <DataCell>[
+                  DataCell(Text(factura.idFactura.toString())),
+                  DataCell(Text(factura.cliente)),
+                  DataCell(Text(factura.vendedor)),
+                  DataCell(Text(factura.total)),
+                  DataCell(Text(factura.createdAt.date.toString())),
+                  DataCell(Text(factura.tipoCompra)),
+                  DataCell(
+                    Container(
+                      margin: EdgeInsets.only(top: 8),
+                      child: Column(
+                        children: [
+                          GestureDetector(
+                              onTap: () {
+                                Navigator.pushNamed(context, "/detallesfactura",
+                                    arguments: [factura.idFactura, type]);
+                              },
+                              child: Icon(
+                                Icons.list_alt,
+                                size: 35,
+                              )),
+                        ],
+                      ),
+                    ),
+                  )
+                ]));
+              });
+              return Expanded(
+                  child: Container(
+                width: MediaQuery.of(context).size.width * 0.9,
+                decoration: BoxDecoration(color: Colors.white),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: DataTable(
+                      sortColumnIndex: 0,
+                      sortAscending: true,
+                      columns: <DataColumn>[
+                        DataColumn(
+                            label: Text(
+                              'No.FacturaCliente',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                            ),
+                            numeric: true),
+                        DataColumn(
+                          label: Text(
+                            'Nombre Fact',
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Vendedor',
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Total',
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Fecha',
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'TipoC',
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Acciones',
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                      ],
+                      rows: rows),
+                ),
+              ));
+            }
+          }),
+    );
+  }
+}
+
+class facturasTableSearch extends StatelessWidget {
+  final String type;
+
+  const facturasTableSearch({Key? key, required this.type}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        child: StreamBuilder(
+            stream: streamController!.stream,
+            builder: (context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                var databody = snapshot.data.data;
+                //print(snapshot.data.data.toString());
+                List<DataRow> rows = [];
+                databody.forEach((factura) {
+                  rows.add(DataRow(cells: <DataCell>[
+                    DataCell(Text(factura.idFactura.toString())),
+                    DataCell(Text(factura.cliente)),
+                    DataCell(Text(factura.vendedor)),
+                    DataCell(Text(factura.total)),
+                    DataCell(Text(factura.createdAt.date.toString())),
+                    DataCell(Text(factura.tipoCompra)),
+                    DataCell(
+                      Container(
+                        margin: EdgeInsets.only(top: 8),
+                        child: Column(
+                          children: [
+                            GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                      context, "/detallesfactura",
+                                      arguments: [factura.idFactura, type]);
+                                },
+                                child: Icon(
+                                  Icons.list_alt,
+                                  size: 35,
+                                )),
+                          ],
+                        ),
+                      ),
+                    )
+                  ]));
+                });
+                return Expanded(
+                    child: Container(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  decoration: BoxDecoration(color: Colors.white),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: DataTable(
+                        sortColumnIndex: 0,
+                        sortAscending: true,
+                        columns: <DataColumn>[
+                          DataColumn(
+                              label: Text(
+                                'No.FacturaCliente',
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                              numeric: true),
+                          DataColumn(
+                            label: Text(
+                              'Nombre Fact',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Vendedor',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Total',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Fecha',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'TipoC',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Acciones',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                            ),
+                          ),
+                        ],
+                        rows: rows),
+                  ),
+                ));
+              } else if (snapshot.hasError) {
+                return new Text("Error");
+              } else {
+                return Container();
+              }
+            })
+        /*child: FutureBuilder(
+          future: futurewidget,
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else {
+              //return _TableGenerator(type: "FacturasMarnor");
+
+          }),*/
+        );
   }
 }
