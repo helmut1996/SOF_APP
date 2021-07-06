@@ -1,22 +1,27 @@
+import 'dart:async';
+
 import 'package:cupertino_tabbar/cupertino_tabbar.dart' as CupertinoTabBar;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/retry.dart';
 import 'package:intl/intl.dart';
 import 'package:sof_app/Business_Logic/Cubit/login_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sof_app/Presentation/pages/reloj.dart';
+import 'package:sof_app/provaiders/models/modelBusquedaFactura.dart';
 import 'package:sof_app/provaiders/models/modelFacturaCarpintero.dart';
 import 'package:sof_app/provaiders/models/modelFacturaCosmetico.dart';
 import 'package:http/http.dart' as http;
 import 'package:async/async.dart';
 import 'package:sof_app/provaiders/models/modelFacturaLibreria.dart';
-//import 'package:http/retry.dart';
 
 final _FacturaCosmetico = AsyncMemoizer<FacturaCosmetico>();
 final _FacturaCarpintero = AsyncMemoizer<FacturaCarpintero>();
 final _FacturaLibreria = AsyncMemoizer<FacturaLibreria>();
+String currentsearchText = "";
 
+final _searchTextController = TextEditingController();
 //es la clase para la conexion de la api FacturaCosmeticos
 Future<FacturaCosmetico> fetchFacturaCosmetico(int pagNum) =>
     _FacturaCosmetico.runOnce(() async {
@@ -58,6 +63,51 @@ Future<FacturaLibreria> fetchFacturaLibreria(int pagNum) =>
       }
     });
 
+//BusquedaFacturasCoametico
+
+Future<BusquedaFacturas> BusquedaFacturaCosmetico(String busqueda) async {
+  final client = RetryClient(http.Client());
+  try {
+    final response = await client.read(Uri.parse(
+        "https://apimarnor.garajestore.com/Apifacturas/buscar_facturas_cosmetico" +
+            busqueda +
+            "?token=ifKZ56rMQdOKmWuDHF"));
+
+    return compute(ParsebusquedaFacturas, response);
+  } finally {
+    client.close();
+  }
+}
+
+//BusquedaFacturasCarpintero
+Future<BusquedaFacturas> BusquedaFacturaCarpintero(String busqueda) async {
+  final client = RetryClient(http.Client());
+  try {
+    final response = await client.read(Uri.parse(
+        "https://apimarnor.garajestore.com/Apifacturas/buscar_facturas_carpintero" +
+            busqueda +
+            "?token=ifKZ56rMQdOKmWuDHF"));
+
+    return compute(ParsebusquedaFacturas, response);
+  } finally {
+    client.close();
+  }
+}
+
+Future<BusquedaFacturas> BusquedaFacturaLibreria(String busqueda) async {
+  final client = RetryClient(http.Client());
+  try {
+    final response = await client.read(Uri.parse(
+        "https://apimarnor.garajestore.com/Apifacturas/buscar_facturas_libreria" +
+            busqueda +
+            "?token=ifKZ56rMQdOKmWuDHF"));
+
+    return compute(ParsebusquedaFacturas, response);
+  } finally {
+    client.close();
+  }
+}
+
 class HomePages extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -72,6 +122,26 @@ class _HomePageState extends State<HomePages> {
   int cupertinoTabBarValue = 0;
   int cupertinoTabBarValueGetter() => cupertinoTabBarValue;
 
+  //para la busqueda de las facturas
+  StreamController<BusquedaFacturas>? streamController;
+  final _searchTextController = TextEditingController();
+  int timestamp =
+      (((new DateTime.now()).millisecondsSinceEpoch) / 1000).round();
+  int last_search = 0;
+  String search_status = "IDLE";
+  Timer? timer;
+
+  load() async {
+    streamController = new StreamController.broadcast();
+  }
+
+  loadsearchresults() async {
+    BusquedaFacturaCosmetico(currentsearchText).then((res) async {
+      streamController!.add(res);
+      return res;
+    });
+  }
+
   @override
   void initState() {
     SystemChrome.setEnabledSystemUIOverlays([]);
@@ -79,7 +149,48 @@ class _HomePageState extends State<HomePages> {
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
+
+    load();
+    _searchTextController.addListener(() {
+      if (currentsearchText == _searchTextController.text) {
+        return;
+      }
+
+      if (last_search == 0) {
+        last_search = (new DateTime.now()).millisecondsSinceEpoch;
+        last_search = (last_search / 1000).round();
+      }
+
+      timestamp = (new DateTime.now()).millisecondsSinceEpoch;
+      timestamp = (timestamp / 1000).round();
+
+      if (timer != null) {
+        timer!.cancel();
+      }
+
+      currentsearchText = _searchTextController.text;
+      setState(() {});
+      if (_searchTextController.text.length > 1 &&
+          (timestamp - last_search > 0)) {
+        loadsearchresults();
+      } else if (_searchTextController.text.length > 1 &&
+          (timestamp - last_search < 1)) {
+        timer = new Timer(const Duration(seconds: 1), return_timer);
+      }
+    });
+
     super.initState();
+  }
+
+  void return_timer() {
+    loadsearchresults();
+  }
+
+  @override
+  void dispose() {
+    streamController!.close();
+    _searchTextController.dispose();
+    super.dispose();
   }
 
   @override
@@ -220,108 +331,130 @@ class _TableGenerator extends StatelessWidget {
         Container(
           padding: EdgeInsets.only(left: 350, right: 350, bottom: 20),
           child: TextField(
+            controller: _searchTextController,
+            onChanged: (txt) {},
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               hintText: 'Buscar Factura',
             ),
           ),
         ),
-        FutureBuilder(
-            future: facturaFuture,
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              } else {
-                //return _TableGenerator(type: "FacturasMarnor");
-                var databody = snapshot.data.facturas;
-                List<DataRow> rows = [];
-                databody.forEach((factura) {
-                  rows.add(DataRow(cells: <DataCell>[
-                    DataCell(Text(factura.idFactura.toString())),
-                    DataCell(Text(factura.cliente)),
-                    DataCell(Text(factura.vendedor)),
-                    DataCell(Text(factura.total)),
-                    DataCell(Text(factura.createdAt.date.toString())),
-                    DataCell(Text(factura.tipoCompra)),
-                    DataCell(
-                      Container(
-                        margin: EdgeInsets.only(top: 8),
-                        child: Column(
-                          children: [
-                            GestureDetector(
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                      context, "/detallesfactura",
-                                      arguments: [factura.idFactura, type]);
-                                },
-                                child: Icon(
-                                  Icons.list_alt,
-                                  size: 35,
-                                )),
-                          ],
-                        ),
-                      ),
-                    )
-                  ]));
-                });
-                return Expanded(
-                    child: Container(
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  decoration: BoxDecoration(color: Colors.white),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: DataTable(
-                        sortColumnIndex: 0,
-                        sortAscending: true,
-                        columns: <DataColumn>[
-                          DataColumn(
-                              label: Text(
-                                'No.FacturaCliente',
-                                style: TextStyle(fontStyle: FontStyle.italic),
+        Builder(
+          builder: (context) {
+            if (currentsearchText == "") {
+              return Container(
+                child: FutureBuilder(
+                    future: facturaFuture,
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      } else {
+                        //return _TableGenerator(type: "FacturasMarnor");
+                        var databody = snapshot.data.facturas;
+                        List<DataRow> rows = [];
+                        databody.forEach((factura) {
+                          rows.add(DataRow(cells: <DataCell>[
+                            DataCell(Text(factura.idFactura.toString())),
+                            DataCell(Text(factura.cliente)),
+                            DataCell(Text(factura.vendedor)),
+                            DataCell(Text(factura.total)),
+                            DataCell(Text(factura.createdAt.date.toString())),
+                            DataCell(Text(factura.tipoCompra)),
+                            DataCell(
+                              Container(
+                                margin: EdgeInsets.only(top: 8),
+                                child: Column(
+                                  children: [
+                                    GestureDetector(
+                                        onTap: () {
+                                          Navigator.pushNamed(
+                                              context, "/detallesfactura",
+                                              arguments: [
+                                                factura.idFactura,
+                                                type
+                                              ]);
+                                        },
+                                        child: Icon(
+                                          Icons.list_alt,
+                                          size: 35,
+                                        )),
+                                  ],
+                                ),
                               ),
-                              numeric: true),
-                          DataColumn(
-                            label: Text(
-                              'Nombre Fact',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
+                            )
+                          ]));
+                        });
+                        return Expanded(
+                            child: Container(
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          decoration: BoxDecoration(color: Colors.white),
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.vertical,
+                            child: DataTable(
+                                sortColumnIndex: 0,
+                                sortAscending: true,
+                                columns: <DataColumn>[
+                                  DataColumn(
+                                      label: Text(
+                                        'No.FacturaCliente',
+                                        style: TextStyle(
+                                            fontStyle: FontStyle.italic),
+                                      ),
+                                      numeric: true),
+                                  DataColumn(
+                                    label: Text(
+                                      'Nombre Fact',
+                                      style: TextStyle(
+                                          fontStyle: FontStyle.italic),
+                                    ),
+                                  ),
+                                  DataColumn(
+                                    label: Text(
+                                      'Vendedor',
+                                      style: TextStyle(
+                                          fontStyle: FontStyle.italic),
+                                    ),
+                                  ),
+                                  DataColumn(
+                                    label: Text(
+                                      'Total',
+                                      style: TextStyle(
+                                          fontStyle: FontStyle.italic),
+                                    ),
+                                  ),
+                                  DataColumn(
+                                    label: Text(
+                                      'Fecha',
+                                      style: TextStyle(
+                                          fontStyle: FontStyle.italic),
+                                    ),
+                                  ),
+                                  DataColumn(
+                                    label: Text(
+                                      'TipoC',
+                                      style: TextStyle(
+                                          fontStyle: FontStyle.italic),
+                                    ),
+                                  ),
+                                  DataColumn(
+                                    label: Text(
+                                      'Acciones',
+                                      style: TextStyle(
+                                          fontStyle: FontStyle.italic),
+                                    ),
+                                  ),
+                                ],
+                                rows: rows),
                           ),
-                          DataColumn(
-                            label: Text(
-                              'Vendedor',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Text(
-                              'Total',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Text(
-                              'Fecha',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Text(
-                              'TipoC',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Text(
-                              'Acciones',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
-                          ),
-                        ],
-                        rows: rows),
-                  ),
-                ));
-              }
-            }),
+                        ));
+                      }
+                    }),
+              );
+            } else {
+              return Container();
+            }
+          },
+        ),
       ],
     );
   }
