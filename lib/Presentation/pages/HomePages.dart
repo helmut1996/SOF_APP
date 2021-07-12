@@ -442,6 +442,7 @@ class facturasTableFuture extends StatelessWidget {
             } else {
               //return _TableGenerator(type: "FacturasMarnor");
               var databody = snapshot.data.facturas;
+              print(snapshot.data);
               List<DataRow> rows = [];
               databody.forEach((factura) {
                 rows.add(DataRow(cells: <DataCell>[

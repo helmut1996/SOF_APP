@@ -35,10 +35,9 @@ class DetallePreFactura {
       required this.stock,
       required this.imagenApk,
       required this.medida,
-      required this.presentacion});
-
-
-
+      required this.presentacion,
+      required this.UndPaquete,
+      required this.Cajones});
 
   double tasaDolar;
   String producto;
@@ -48,6 +47,8 @@ class DetallePreFactura {
   String imagenApk;
   String medida;
   String presentacion;
+  int UndPaquete;
+  int Cajones;
   factory DetallePreFactura.fromJson(Map<String, dynamic> json) =>
       DetallePreFactura(
           producto: json["Producto"],
@@ -57,7 +58,9 @@ class DetallePreFactura {
           stock: json["Stock"],
           imagenApk: json["ImagenAPK"],
           medida: json["Medida"],
-          presentacion: json["Presentacion"]);
+          presentacion: json["Presentacion"],
+          UndPaquete: json["UndPaquete"],
+          Cajones: json["Cajones"]);
 }
 
 class InfoPreFactura {

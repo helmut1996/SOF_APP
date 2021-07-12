@@ -33,22 +33,20 @@ class FacturaCarpintero {
 }
 
 class Factura {
-  Factura(
-      {required this.rowNumber,
-      required this.idFactura,
-      required this.vendedor,
-      required this.idCliente,
-      required this.cliente,
-      required this.limiteCredito,
-      required this.plazoPago,
-      required this.estado,
-      required this.credito,
-      required this.createdAt,
-      required this.total,
-      required this.tipoCompra,
-      required this.presentacion,
-      required this.UndPaquete,
-      required this.Cajones});
+  Factura({
+    required this.rowNumber,
+    required this.idFactura,
+    required this.vendedor,
+    required this.idCliente,
+    required this.cliente,
+    required this.limiteCredito,
+    required this.plazoPago,
+    required this.estado,
+    required this.credito,
+    required this.createdAt,
+    required this.total,
+    required this.tipoCompra,
+  });
 
   String rowNumber;
   int idFactura;
@@ -62,26 +60,21 @@ class Factura {
   CreatedAt createdAt;
   String total;
   String tipoCompra;
-  String presentacion;
-  int UndPaquete;
-  int Cajones;
 
   factory Factura.fromJson(Map<String, dynamic> json) => Factura(
-      rowNumber: json["rowNumber"],
-      idFactura: json["idFactura"],
-      vendedor: json["Vendedor"],
-      idCliente: json["idCliente"],
-      cliente: json["Cliente"],
-      limiteCredito: json["LimiteCredito"],
-      plazoPago: json["PlazoPago"],
-      estado: json["Estado"],
-      credito: json["Credito"],
-      createdAt: CreatedAt.fromJson(json["created_at"]),
-      total: json["Total"],
-      tipoCompra: json["TipoCompra"],
-      UndPaquete: json["UndPaquete"],
-      Cajones: json["Cajones"],
-      presentacion: json["Presentacion"]);
+        rowNumber: json["rowNumber"],
+        idFactura: json["idFactura"],
+        vendedor: json["Vendedor"],
+        idCliente: json["idCliente"],
+        cliente: json["Cliente"],
+        limiteCredito: json["LimiteCredito"],
+        plazoPago: json["PlazoPago"],
+        estado: json["Estado"],
+        credito: json["Credito"],
+        createdAt: CreatedAt.fromJson(json["created_at"]),
+        total: json["Total"],
+        tipoCompra: json["TipoCompra"],
+      );
 
   Map<String, dynamic> toJson() => {
         "rowNumber": rowNumber,
