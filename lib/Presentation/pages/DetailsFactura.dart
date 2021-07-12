@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -5,6 +6,7 @@ import 'package:sof_app/Presentation/pages/HomePages.dart';
 import 'package:sof_app/provaiders/models/modelDetalleFactura.dart';
 import 'package:http/http.dart' as http;
 import 'package:async/async.dart';
+import 'package:sof_app/provaiders/models/modelDetallePrefacturaCosmeticos.dart';
 import 'package:sof_app/provaiders/models/modelFacturaCosmetico.dart';
 
 //final _DetalleFacturaCosmetico = AsyncMemoizer<DetalleFacturaCosmeticos>();
@@ -20,6 +22,19 @@ Future<DetalleFacturaCosmeticos> fetchDetalleFacturaCosmetico(
           "/?token=ifKZ56rMQdOKmWuDHF"));
   if (response.statusCode == 200) {
     return compute(ParsedetalleFacturaCosmeticos, response.body);
+  } else {
+    throw Exception("Failed to load.");
+  }
+}
+
+Future<DetallePreFacturaCosmeticos> fetchDetallePreFacturaCosmetico(
+    int idFactura) async {
+  final response = await http.get(Uri.parse(
+      "https://apimarnor.garajestore.com/Apifacturas/info_prefactura_cosmetico/" +
+          idFactura.toString() +
+          "/?token=ifKZ56rMQdOKmWuDHF"));
+  if (response.statusCode == 200) {
+    return compute(ParsedetallePreFacturaCosmeticos, response.body);
   } else {
     throw Exception("Failed to load.");
   }
@@ -71,19 +86,20 @@ class _DetailsFacturaState extends State<DetailsFactura> {
     switch (widget.type) {
       case 'FacturasMarnor':
         facturaDetalleFuture = fetchDetalleFacturaCosmetico(widget.idFactura);
-        URL = "http://ferreteriaelcarpintero.com/images/productos/";
+        URL = "https://ferreteriaelcarpintero.com/images/productos/";
         break;
       case 'PreFacturasMarnor':
-        facturaDetalleFuture = fetchDetalleFacturaCosmetico(widget.idFactura);
-        URL = "http://ferreteriaelcarpintero.com/images/productos/";
+        facturaDetalleFuture =
+            fetchDetallePreFacturaCosmetico(widget.idFactura);
+        URL = "https://ferreteriaelcarpintero.com/images/productos/";
         break;
       case 'FacturasLibreria':
         facturaDetalleFuture = fetchDetalleFacturaLibreria(widget.idFactura);
-        URL = "http://ferreteriaelcarpintero.com/imgesc/";
+        URL = "https://ferreteriaelcarpintero.com/imgesc/";
         break;
       case 'FacturasCarpintero':
         facturaDetalleFuture = fetchDetalleFacturaCarpintero(widget.idFactura);
-        URL = "http://ferreteriaelcarpintero.com/images/carpintero/";
+        URL = "https://ferreteriaelcarpintero.com/images/carpintero/";
         break;
     }
     var size = MediaQuery.of(context).size;
@@ -91,7 +107,7 @@ class _DetailsFacturaState extends State<DetailsFactura> {
     final double itemWidth = size.width / 2;
     return Scaffold(
       appBar: AppBar(
-        title: Text("No.Factura" + widget.idFactura.toString()),
+        title: Text("No.Factura: " + widget.idFactura.toString()),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -112,6 +128,9 @@ class _DetailsFacturaState extends State<DetailsFactura> {
                         List<DataRow> rows = [];
 
                         listaProductos.forEach((producto) {
+                          if (!producto.imagenApk.contains('.jpg')) {
+                            producto.imagenApk = producto.imagenApk + ".jpg";
+                          }
                           rows.add(DataRow(cells: <DataCell>[
                             DataCell(Text(producto.producto)),
                             DataCell(Text(producto.cantidad.toString())),
@@ -138,20 +157,32 @@ class _DetailsFacturaState extends State<DetailsFactura> {
                                                             .toString()),
                                                     Text('UnidadMedida' +
                                                         producto.medida),
-                                                    Image.network(
-                                                      "https://firebasestorage.googleapis.com/v0/b/prueba2-8bf0c.appspot.com/o/logo2.jpg?alt=media&token=8b655399-4cd3-4c8b-b6ab-855280db1e19",
-                                                      width: 300,
-                                                      height: 250,
+                                                    SizedBox(
+                                                      width: 400,
+                                                      /*height: 250,*/
+                                                      child: CachedNetworkImage(
+                                                        progressIndicatorBuilder:
+                                                            (context, url,
+                                                                    progress) =>
+                                                                Center(
+                                                          child:
+                                                              CircularProgressIndicator(
+                                                            value: progress
+                                                                .progress,
+                                                          ),
+                                                        ),
+                                                        imageUrl: URL +
+                                                            producto.imagenApk,
+                                                        errorWidget: (context,
+                                                                url, error) =>
+                                                            Image(
+                                                                image: AssetImage(
+                                                                    "assets/imagenes/imageplaceholder.jpg")),
+                                                      ),
                                                     ),
                                                   ],
                                                 ),
                                                 actions: <Widget>[
-                                                  TextButton(
-                                                    onPressed: () =>
-                                                        Navigator.pop(
-                                                            context, 'Cancel'),
-                                                    child: const Text('Cancel'),
-                                                  ),
                                                   TextButton(
                                                     onPressed: () =>
                                                         Navigator.pop(
@@ -171,6 +202,7 @@ class _DetailsFacturaState extends State<DetailsFactura> {
                             )
                           ]));
                         });
+
                         return Container(
                           child: Column(
                             children: [
@@ -272,6 +304,7 @@ class _DetailsFacturaState extends State<DetailsFactura> {
                                       child: Text(
                                         "Tasa de Cambio: " +
                                             infoFactura.tasaDolar.toString(),
+                                        /*infoFactura.tasaDolar.toString()*/
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontSize: 14.0,

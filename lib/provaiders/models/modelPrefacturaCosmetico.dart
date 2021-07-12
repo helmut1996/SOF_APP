@@ -1,39 +1,37 @@
-// To parse this JSON data, do
-//
-//     final busquedaFacturas = busquedaFacturasFromJson(jsonString);
-
 import 'dart:convert';
+import 'dart:developer';
 
-BusquedaFacturas ParsebusquedaFacturas(String respomseBody) =>
-    BusquedaFacturas.fromJson(json.decode(respomseBody));
+PreFacturaCosmetico ParsePreFacturaCosmetico(String responseBody) =>
+    PreFacturaCosmetico.fromJson(json.decode(responseBody));
 
-String busquedaFacturasToJson(BusquedaFacturas data) =>
+String facturaCosmeticoToJson(PreFacturaCosmetico data) =>
     json.encode(data.toJson());
 
-class BusquedaFacturas {
-  BusquedaFacturas({
+class PreFacturaCosmetico {
+  PreFacturaCosmetico({
     required this.success,
-    required this.data,
+    required this.facturas,
   });
 
   bool success;
-  List<InfoBusquedaFacturas> data;
+  List<Factura> facturas;
 
-  factory BusquedaFacturas.fromJson(Map<String, dynamic> json) =>
-      BusquedaFacturas(
+  factory PreFacturaCosmetico.fromJson(Map<String, dynamic> json) =>
+      PreFacturaCosmetico(
         success: json["success"],
-        data: List<InfoBusquedaFacturas>.from(
-            json["data"].map((x) => InfoBusquedaFacturas.fromJson(x))),
+        facturas: List<Factura>.from(
+            json["facturas"].map((x) => Factura.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "success": success,
-        "data": List<dynamic>.from(data.map((x) => x.toJson())),
+        "facturas": List<dynamic>.from(facturas.map((x) => x.toJson())),
       };
 }
 
-class InfoBusquedaFacturas {
-  InfoBusquedaFacturas({
+class Factura {
+  Factura({
+    required this.rowNumber,
     required this.idFactura,
     required this.vendedor,
     required this.idCliente,
@@ -41,12 +39,12 @@ class InfoBusquedaFacturas {
     required this.limiteCredito,
     required this.plazoPago,
     required this.estado,
-    required this.credito,
     required this.createdAt,
     required this.total,
     required this.tipoCompra,
   });
 
+  String rowNumber;
   int idFactura;
   String vendedor;
   int idCliente;
@@ -54,37 +52,33 @@ class InfoBusquedaFacturas {
   int limiteCredito;
   int plazoPago;
   String estado;
-  int credito;
   CreatedAt createdAt;
   String total;
   String tipoCompra;
 
-  factory InfoBusquedaFacturas.fromJson(Map<String, dynamic> json) =>
-      InfoBusquedaFacturas(
-        idFactura: json["idFactura"] != null
-            ? json["idFactura"]
-            : json["idPrefactura"],
+  factory Factura.fromJson(Map<String, dynamic> json) => Factura(
+        rowNumber: json["rowNumber"],
+        idFactura: json["idPreFactura"],
         vendedor: json["Vendedor"],
         idCliente: json["idCliente"],
         cliente: json["Cliente"],
         limiteCredito: json["LimiteCredito"],
         plazoPago: json["PlazoPago"],
         estado: json["Estado"],
-        credito: json["Credito"],
         createdAt: CreatedAt.fromJson(json["created_at"]),
         total: json["Total"],
         tipoCompra: json["TipoCompra"],
       );
 
   Map<String, dynamic> toJson() => {
-        "idFactura": idFactura,
+        "rowNumber": rowNumber,
+        "idPreFactura": idFactura,
         "Vendedor": vendedor,
         "idCliente": idCliente,
         "Cliente": cliente,
         "LimiteCredito": limiteCredito,
         "PlazoPago": plazoPago,
         "Estado": estado,
-        "Credito": credito,
         "created_at": createdAt.toJson(),
         "Total": total,
         "TipoCompra": tipoCompra,

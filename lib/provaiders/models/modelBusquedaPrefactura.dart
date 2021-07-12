@@ -4,14 +4,14 @@
 
 import 'dart:convert';
 
-BusquedaFacturas ParsebusquedaFacturas(String respomseBody) =>
-    BusquedaFacturas.fromJson(json.decode(respomseBody));
+BusquedaPreFacturas ParsebusquedaPreFacturas(String respomseBody) =>
+    BusquedaPreFacturas.fromJson(json.decode(respomseBody));
 
-String busquedaFacturasToJson(BusquedaFacturas data) =>
+String busquedaFacturasToJson(BusquedaPreFacturas data) =>
     json.encode(data.toJson());
 
-class BusquedaFacturas {
-  BusquedaFacturas({
+class BusquedaPreFacturas {
+  BusquedaPreFacturas({
     required this.success,
     required this.data,
   });
@@ -19,8 +19,8 @@ class BusquedaFacturas {
   bool success;
   List<InfoBusquedaFacturas> data;
 
-  factory BusquedaFacturas.fromJson(Map<String, dynamic> json) =>
-      BusquedaFacturas(
+  factory BusquedaPreFacturas.fromJson(Map<String, dynamic> json) =>
+      BusquedaPreFacturas(
         success: json["success"],
         data: List<InfoBusquedaFacturas>.from(
             json["data"].map((x) => InfoBusquedaFacturas.fromJson(x))),
@@ -61,9 +61,7 @@ class InfoBusquedaFacturas {
 
   factory InfoBusquedaFacturas.fromJson(Map<String, dynamic> json) =>
       InfoBusquedaFacturas(
-        idFactura: json["idFactura"] != null
-            ? json["idFactura"]
-            : json["idPrefactura"],
+        idFactura: json["idPreFactura"],
         vendedor: json["Vendedor"],
         idCliente: json["idCliente"],
         cliente: json["Cliente"],

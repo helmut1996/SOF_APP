@@ -10,11 +10,13 @@ import 'package:sof_app/Business_Logic/Cubit/login_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sof_app/Presentation/pages/reloj.dart';
 import 'package:sof_app/provaiders/models/modelBusquedaFactura.dart';
+import 'package:sof_app/provaiders/models/modelBusquedaPrefactura.dart';
 import 'package:sof_app/provaiders/models/modelFacturaCarpintero.dart';
 import 'package:sof_app/provaiders/models/modelFacturaCosmetico.dart';
 import 'package:http/http.dart' as http;
 import 'package:async/async.dart';
 import 'package:sof_app/provaiders/models/modelFacturaLibreria.dart';
+import 'package:sof_app/provaiders/models/modelPrefacturaCosmetico.dart';
 //import 'package:http/retry.dart';
 
 final _FacturaCosmetico = AsyncMemoizer<FacturaCosmetico>();
@@ -25,49 +27,74 @@ final _searchTextController = TextEditingController();
 StreamController<BusquedaFacturas>? streamController;
 final String TipoFactura = '';
 
+String currentTab = '';
+
 //es la clase para la conexion de la api FacturaCosmeticos
-Future<FacturaCosmetico> fetchFacturaCosmetico(int pagNum) =>
-    _FacturaCosmetico.runOnce(() async {
-      final response = await http.get(Uri.parse(
-          "https://apimarnor.garajestore.com/Apifacturas/listar_facturas_cosmeticos/" +
-              pagNum.toString() +
-              "/?token=ifKZ56rMQdOKmWuDHF"));
-      if (response.statusCode == 200) {
-        return compute(ParseFacturaCosmetico, response.body);
-      } else {
-        throw Exception("Failed to load.");
-      }
-    });
+Future<FacturaCosmetico> fetchFacturaCosmetico(int pagNum) async {
+  final response = await http.get(Uri.parse(
+      "https://apimarnor.garajestore.com/Apifacturas/listar_facturas_cosmeticos/" +
+          pagNum.toString() +
+          "/?token=ifKZ56rMQdOKmWuDHF"));
+  if (response.statusCode == 200) {
+    return compute(ParseFacturaCosmetico, response.body);
+  } else {
+    throw Exception("Failed to load.");
+  }
+}
+
+Future<PreFacturaCosmetico> fetchPreFacturaCosmetico(int pagNum) async {
+  final response = await http.get(Uri.parse(
+      "https://apimarnor.garajestore.com/Apifacturas/listar_prefacturas_cosmetico/" +
+          pagNum.toString() +
+          "/?token=ifKZ56rMQdOKmWuDHF"));
+  if (response.statusCode == 200) {
+    return compute(ParsePreFacturaCosmetico, response.body);
+  } else {
+    throw Exception("Failed to load.");
+  }
+}
 
 //es la clase para la conexion de la api FacturaCarpintero
-Future<FacturaCarpintero> fetchFacturaCarpintero(int pagNum) =>
-    _FacturaCarpintero.runOnce(() async {
-      final response = await http.get(Uri.parse(
-          "https://apimarnor.garajestore.com/Apifacturas/listar_facturas_carpintero/" +
-              pagNum.toString() +
-              "/?token=ifKZ56rMQdOKmWuDHF"));
-      if (response.statusCode == 200) {
-        return compute(ParseFacturaCarpintero, response.body);
-      } else {
-        throw Exception("Failed to load.");
-      }
-    });
+Future<FacturaCarpintero> fetchFacturaCarpintero(int pagNum) async {
+  final response = await http.get(Uri.parse(
+      "https://apimarnor.garajestore.com/Apifacturas/listar_facturas_carpintero/" +
+          pagNum.toString() +
+          "/?token=ifKZ56rMQdOKmWuDHF"));
+  if (response.statusCode == 200) {
+    return compute(ParseFacturaCarpintero, response.body);
+  } else {
+    throw Exception("Failed to load.");
+  }
+}
+
 //es la clase para la conexion de la api FacturaLibreria
-Future<FacturaLibreria> fetchFacturaLibreria(int pagNum) =>
-    _FacturaLibreria.runOnce(() async {
-      final response = await http.get(Uri.parse(
-          "https://apimarnor.garajestore.com/Apifacturas/listar_facturas_libreria/" +
-              pagNum.toString() +
-              "/?token=ifKZ56rMQdOKmWuDHF"));
-      if (response.statusCode == 200) {
-        return compute(ParseFacturaLibreria, response.body);
-      } else {
-        throw Exception("Failed to load.");
-      }
-    });
+Future<FacturaLibreria> fetchFacturaLibreria(int pagNum) async {
+  final response = await http.get(Uri.parse(
+      "https://apimarnor.garajestore.com/Apifacturas/listar_facturas_libreria/" +
+          pagNum.toString() +
+          "/?token=ifKZ56rMQdOKmWuDHF"));
+  if (response.statusCode == 200) {
+    return compute(ParseFacturaLibreria, response.body);
+  } else {
+    throw Exception("Failed to load.");
+  }
+}
 //BusquedaFacturas
 
 Future<BusquedaFacturas> BusquedaFacturaCosmetico(String busqueda) async {
+  final client = RetryClient(http.Client());
+  try {
+    final response = await client.read(Uri.parse(
+        "https://apimarnor.garajestore.com/Apifacturas/buscar_facturas_cosmetico/" +
+            busqueda +
+            "/?token=ifKZ56rMQdOKmWuDHF"));
+
+    return compute(ParsebusquedaFacturas, response);
+  } finally {
+    client.close();
+  }
+}
+Future<BusquedaFacturas> BusquedaPreFacturaCosmetico(String busqueda) async {
   final client = RetryClient(http.Client());
   try {
     final response = await client.read(Uri.parse(
@@ -89,6 +116,19 @@ Future<BusquedaFacturas> BusquedaFacturaCarpintero(String busqueda) async {
         "https://apimarnor.garajestore.com/Apifacturas/buscar_facturas_carpintero/" +
             busqueda +
             "/?token=ifKZ56rMQdOKmWuDHF"));
+    return compute(ParsebusquedaFacturas, response);
+  } finally {
+    client.close();
+  }
+}
+
+Future<BusquedaFacturas> BusquedaFacturaLibreria(String busqueda) async {
+  final client = RetryClient(http.Client());
+  try {
+    final response = await client.read(Uri.parse(
+        "https://apimarnor.garajestore.com/Apifacturas/buscar_facturas_libreria/" +
+            busqueda +
+            "/?token=ifKZ56rMQdOKmWuDHF"));
 
     return compute(ParsebusquedaFacturas, response);
   } finally {
@@ -101,11 +141,14 @@ class HomePages extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePages> {
+class _HomePageState extends State<HomePages>
+    with SingleTickerProviderStateMixin {
   String getSystemTime() {
     var now = new DateTime.now();
     return new DateFormat().add_jms().format(now);
   }
+
+  late TabController _tabBarController;
 
   int cupertinoTabBarValue = 0;
   int cupertinoTabBarValueGetter() => cupertinoTabBarValue;
@@ -124,11 +167,33 @@ class _HomePageState extends State<HomePages> {
   }
 
   loadsearchresults() async {
-    //Crear un switch
-    BusquedaFacturaCosmetico(currentsearchText).then((res) async {
-      streamController!.add(res);
-      return res;
-    });
+    switch (currentTab) {
+      case 'FacturasMarnor':
+        BusquedaFacturaCosmetico(currentsearchText).then((res) async {
+          streamController!.add(res);
+          print(res.toString());
+          return res;
+        });
+        break;
+      case 'PreFacturasMarnor':
+        BusquedaPreFacturaCosmetico(currentsearchText).then((res) async {
+          streamController!.add(res);
+          return res;
+        });
+        break;
+      case 'FacturasCarpintero':
+        BusquedaFacturaCarpintero(currentsearchText).then((res) async {
+          streamController!.add(res);
+          return res;
+        });
+        break;
+      case 'FacturasLibreria':
+        BusquedaFacturaLibreria(currentsearchText).then((res) async {
+          streamController!.add(res);
+          return res;
+        });
+        break;
+    }
   }
 
 ///////
@@ -167,6 +232,12 @@ class _HomePageState extends State<HomePages> {
           (timestamp - last_search < 1)) {
         timer = new Timer(const Duration(seconds: 1), return_timer);
       }
+    });
+    _tabBarController = TabController(vsync: this, length: 4);
+
+    _tabBarController.addListener(() {
+      currentsearchText = "";
+      _searchTextController.clear();
     });
 
     super.initState();
@@ -208,6 +279,7 @@ class _HomePageState extends State<HomePages> {
                             child: TabBar(
                               indicatorColor: Color(0xFFd4d7dd),
                               //unselectedLabelColor: Colors.,
+                              controller: _tabBarController,
                               tabs: <Widget>[
                                 Container(
                                   height: 200,
@@ -263,6 +335,7 @@ class _HomePageState extends State<HomePages> {
               ];
             },
             body: TabBarView(
+              controller: _tabBarController,
               children: <Widget>[
                 _TableGenerator(type: "FacturasMarnor"),
                 _TableGenerator(type: "PreFacturasMarnor"),
@@ -298,17 +371,22 @@ class _TableGenerator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var facturaFuture;
+
     switch (type) {
       case 'FacturasMarnor':
+        currentTab = 'FacturasMarnor';
         facturaFuture = fetchFacturaCosmetico(1);
         break;
       case 'PreFacturasMarnor':
-        facturaFuture = fetchFacturaCosmetico(1);
+        currentTab = 'PreFacturasMarnor';
+        facturaFuture = fetchPreFacturaCosmetico(1);
         break;
       case 'FacturasLibreria':
+        currentTab = 'FacturasLibreria';
         facturaFuture = fetchFacturaLibreria(1);
         break;
       case 'FacturasCarpintero':
+        currentTab = 'FacturasCarpintero';
         facturaFuture = fetchFacturaCarpintero(1);
         break;
     }
