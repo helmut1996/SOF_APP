@@ -134,6 +134,13 @@ class _DetailsFacturaState extends State<DetailsFactura> {
                           rows.add(DataRow(cells: <DataCell>[
                             DataCell(Text(producto.producto)),
                             DataCell(Text(producto.cantidad.toString())),
+                            DataCell(Text(producto.UndPaquete.toString() +
+                                " " +
+                                producto.presentacion)),
+                            DataCell(Text(
+                                (producto.cantidad / producto.UndPaquete)
+                                    .toStringAsFixed(2)
+                                    .toString())),
                             DataCell(Text(producto.precio.toString())),
                             DataCell(Text((producto.cantidad * producto.precio)
                                 .toString())),
@@ -156,7 +163,12 @@ class _DetailsFacturaState extends State<DetailsFactura> {
                                                         producto.stock
                                                             .toString()),
                                                     Text('UnidadMedida' +
-                                                        producto.medida),
+                                                        producto.medida +
+                                                        " " +
+                                                        producto.presentacion),
+                                                    Text("Existencia Cajones:" +
+                                                        producto.Cajones
+                                                            .toString()),
                                                     SizedBox(
                                                       width: 400,
                                                       /*height: 250,*/
@@ -327,6 +339,20 @@ class _DetailsFacturaState extends State<DetailsFactura> {
                                     DataColumn(
                                       label: Text(
                                         'Cantidad',
+                                        style: TextStyle(
+                                            fontStyle: FontStyle.italic),
+                                      ),
+                                    ),
+                                    DataColumn(
+                                      label: Text(
+                                        'Presentacion',
+                                        style: TextStyle(
+                                            fontStyle: FontStyle.italic),
+                                      ),
+                                    ),
+                                    DataColumn(
+                                      label: Text(
+                                        'Cajones',
                                         style: TextStyle(
                                             fontStyle: FontStyle.italic),
                                       ),

@@ -33,7 +33,9 @@ class DetalleFactura {
       required this.stock,
       required this.imagenApk,
       required this.medida,
-      required this.presentacion});
+      required this.presentacion,
+      required this.UndPaquete,
+      required this.Cajones});
 
   String producto;
   int cantidad;
@@ -42,6 +44,8 @@ class DetalleFactura {
   String imagenApk;
   String medida;
   String presentacion;
+  int UndPaquete;
+  int Cajones;
   factory DetalleFactura.fromJson(Map<String, dynamic> json) => DetalleFactura(
       producto: json["Producto"],
       cantidad: json["Cantidad"],
@@ -49,7 +53,9 @@ class DetalleFactura {
       stock: json["Stock"],
       imagenApk: json["ImagenAPK"],
       medida: json["Medida"],
-      presentacion: json["Presentacion"]);
+      presentacion: json["Presentacion"],
+      UndPaquete: json["UndPaquete"],
+      Cajones: json["Cajones"]);
 }
 
 class InfoFactura {
