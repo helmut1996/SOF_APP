@@ -94,11 +94,12 @@ Future<BusquedaFacturas> BusquedaFacturaCosmetico(String busqueda) async {
     client.close();
   }
 }
+
 Future<BusquedaFacturas> BusquedaPreFacturaCosmetico(String busqueda) async {
   final client = RetryClient(http.Client());
   try {
     final response = await client.read(Uri.parse(
-        "https://apimarnor.garajestore.com/Apifacturas/buscar_facturas_cosmetico/" +
+        "https://apimarnor.garajestore.com/Apifacturas/buscar_prefacturas_cosmetico/" +
             busqueda +
             "/?token=ifKZ56rMQdOKmWuDHF"));
 

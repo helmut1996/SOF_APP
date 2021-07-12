@@ -70,7 +70,7 @@ class InfoBusquedaFacturas {
         limiteCredito: json["LimiteCredito"],
         plazoPago: json["PlazoPago"],
         estado: json["Estado"],
-        credito: json["Credito"],
+        credito: json["Credito"] != null ? json["Credito"] : 0,
         createdAt: CreatedAt.fromJson(json["created_at"]),
         total: json["Total"],
         tipoCompra: json["TipoCompra"],
