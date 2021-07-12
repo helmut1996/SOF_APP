@@ -37,6 +37,9 @@ class DetallePreFactura {
       required this.medida,
       required this.presentacion});
 
+
+
+
   double tasaDolar;
   String producto;
   int cantidad;
